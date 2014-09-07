@@ -6,6 +6,10 @@ JavaScript based Multi-User Dungeon
 
 npm install
 
+bower install
+
+grunt init
+
 ## Running
 
-npm start
+grunt server
