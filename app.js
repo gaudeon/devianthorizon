@@ -4,9 +4,9 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
-// load routes
-var routes = require('./routes/index'); // routes for '/'
+var io = require('socket.io')(app);
+var routes = require('./routes/index');
+var mud = require('./app/mud');
 
 var app = express();
 
@@ -23,8 +23,22 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// setup routes
 app.use('/', routes);
+
+// socket io
+var world = io
+  .of('/world')
+  .on('connection', function (socket) {
+      // Connected to world
+      // Use mud.world here
+  });
+
+var login = io
+    .of('/login')
+    .on('connection', function(socket) {
+        // Connected to login
+        // Use mud.login here
+    });
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
