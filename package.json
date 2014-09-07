@@ -1,17 +1,19 @@
 {
   "name": "mudJS",
-  "version": "0.0.0",
+  "version": "0.0.1",
+  "license": "MIT",
   "private": true,
   "scripts": {
     "start": "node ./bin/www"
   },
   "dependencies": {
-    "express": "~4.8.6",
     "body-parser": "~1.6.6",
     "cookie-parser": "~1.3.2",
-    "morgan": "~1.2.3",
-    "serve-favicon": "~2.0.1",
     "debug": "~1.0.4",
-    "jade": "~1.5.0"
+    "express": "~4.8.6",
+    "express-handlebars": "^1.0.3",
+    "jade": "~1.5.0",
+    "morgan": "~1.2.3",
+    "serve-favicon": "~2.0.1"
   }
 }
