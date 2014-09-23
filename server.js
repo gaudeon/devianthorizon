@@ -47,6 +47,9 @@ var login = io
     .on('connection', function(socket) {
         // Connected to login
         // Use mud.login here
+        socket.on('connect', function(data) {
+            console.log('client connected to login');
+        });
     });
 
 // catch 404 and forward to error handler

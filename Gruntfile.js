@@ -10,7 +10,7 @@ module.exports = function(grunt) {
             public : ['public/css','public/img','public/js'],
             build  : 'build',
             dev    : {
-                src: ['build/client.js', 'build/mud.js'],
+                src: ['build/client.js', 'build/main.js'],
                 css: ['build/client.css', 'build/common.css']
             },
             prod   : 'dist'
@@ -33,9 +33,9 @@ module.exports = function(grunt) {
                     transform: [ 'browserify-shim' ]
                 }
             },
-            mud: {
+            main: {
                 files: {
-                    'build/mud.js': ['client/src/mud.js']
+                    'build/main.js': ['client/src/main.js']
                 }
             }
         },
@@ -53,7 +53,7 @@ module.exports = function(grunt) {
         },
 
         concat: {
-            'build/client.js': ['build/vendor.js', 'build/mud.js']
+            'build/client.js': ['build/vendor.js', 'build/main.js']
         },
 
         copy: {
@@ -106,7 +106,7 @@ module.exports = function(grunt) {
         watch: {
             scripts: {
                 files: ['client/src/**/*.js'],
-                tasks: ['clean:dev:src', 'browserify:mud', 'concat', 'copy:dev']
+                tasks: ['clean:dev:src', 'browserify:main', 'concat', 'copy:dev']
             },
             sass: {
                 files: ['client/styles/**/*.scss'],
@@ -135,8 +135,8 @@ module.exports = function(grunt) {
 
     grunt.registerTask('init', ['clean', 'bower', 'browserify:vendor']);
 
-    grunt.registerTask('dev', ['clean:dev', 'browserify:mud', 'sass', 'concat', 'copy:dev']);
-    grunt.registerTask('prod', ['clean:prod', 'browserify:mud', 'sass', 'concat', 'copy:prod', 'cssmin', 'uglify']);
+    grunt.registerTask('dev', ['clean:dev', 'browserify:main', 'sass', 'concat', 'copy:dev']);
+    grunt.registerTask('prod', ['clean:prod', 'browserify:main', 'sass', 'concat', 'copy:prod', 'cssmin', 'uglify']);
 
     grunt.registerTask('dev:clean', 'clean:dev');
     grunt.registerTask('prod:clean', 'clean:prod');

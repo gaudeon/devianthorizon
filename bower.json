@@ -20,7 +20,7 @@
   },
   "exportsOverride": {
     "jquery": {
-      "js": "jquery.js"
+      "js": "dist/jquery.js"
     },
     "underscore": {
       "js": "underscore.js"

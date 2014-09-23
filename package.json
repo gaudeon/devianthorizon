@@ -36,15 +36,29 @@
     "time-grunt": "^1.0.0"
   },
   "browser": {
-      "backbone": "./client/requires/backbone/js/backbone.js",
-      "underscore": "./client/requires/underscore/js/underscore.js"
+    "jquery": "./client/requires/jquery/js/jquery.js",
+    "backbone": "./client/requires/backbone/js/backbone.js",
+    "backbone.marionette": "./client/requires/backbone.marionette/js/backbone.marionette.js",
+    "underscore": "./client/requires/underscore/js/underscore.js",
+    "socket": "./client/requires/socket.io-client/js/socket.io.js"
   },
   "browserify-shim": {
-    "underscore": {
-        "exports": "_"
+    "jquery"     : {
+      "exports": "$"
     },
-    "backbone": {
-        "exports": "backbone"
+    "underscore" : {
+      "exports": "_"
+    },
+    "backbone"   : {
+      "exports": "Backbone",
+      "depends": [ "jquery:$", "underscore:_" ]
+    },
+    "backbone.marionette"   : {
+      "exports": "Marionette",
+      "depends": [ "jquery:$", "underscore:_", "backbone:Backbone" ]
+    },
+    "socket"  : {
+      "exports": "socket"
     }
   }
 }
