@@ -28,7 +28,10 @@ module.exports = function(grunt) {
         browserify: {
             vendor: {
                 src: ['client/requires/**/*.js'],
-                dest: 'build/vendor.js'
+                dest: 'build/vendor.js',
+                options: {
+                    transform: [ 'browserify-shim' ]
+                }
             },
             mud: {
                 files: {
