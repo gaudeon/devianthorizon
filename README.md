@@ -2,7 +2,13 @@
 
 JavaScript based Multi-User Dungeon
 
-## Requirements
+## Prerequisites
+
+node.js
+
+ruby and sass gem
+
+## Setup
 
 npm install
 
