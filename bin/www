@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 var debug = require('debug')('mudJS');
-var app = require('../server');
+var server = require('../server');
 
-app.set('port', process.env.PORT || 3000);
+server.app.set('port', process.env.PORT || 3000);
 
-var server = app.listen(app.get('port'), function() {
-  debug('Express server listening on port ' + server.address().port);
+server.http.listen(server.app.get('port'), function() {
+  debug('Express server listening on port ' + server.http.address().port);
 });

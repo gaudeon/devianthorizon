@@ -1,6 +1,6 @@
 {
   "name": "mudJS",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "MIT",
   "private": true,
   "scripts": {
@@ -11,7 +11,8 @@
     "cookie-parser": "~1.3.2",
     "debug": "^1.0.4",
     "express": "^4.8.8",
-    "express-handlebars": "^1.0.3",
+    "express-handlebars": "^1.1.0",
+    "handlebars": "^2.0.0",
     "morgan": "^1.2.3",
     "serve-favicon": "^2.0.1",
     "socket.io": "^1.1.0"
@@ -32,6 +33,7 @@
     "grunt-contrib-uglify": "^0.5.1",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-nodemon": "^0.3.0",
+    "hbsfy": "^2.2.0",
     "load-grunt-tasks": "^0.6.0",
     "time-grunt": "^1.0.0"
   },
@@ -43,21 +45,28 @@
     "socket": "./client/requires/socket.io-client/js/socket.io.js"
   },
   "browserify-shim": {
-    "jquery"     : {
+    "jquery": {
       "exports": "$"
     },
-    "underscore" : {
+    "underscore": {
       "exports": "_"
     },
-    "backbone"   : {
+    "backbone": {
       "exports": "Backbone",
-      "depends": [ "jquery:$", "underscore:_" ]
+      "depends": [
+        "jquery:$",
+        "underscore:_"
+      ]
     },
-    "backbone.marionette"   : {
+    "backbone.marionette": {
       "exports": "Marionette",
-      "depends": [ "jquery:$", "underscore:_", "backbone:Backbone" ]
+      "depends": [
+        "jquery:$",
+        "underscore:_",
+        "backbone:Backbone"
+      ]
     },
-    "socket"  : {
+    "socket": {
       "exports": "socket"
     }
   }

@@ -1,5 +1,7 @@
 // Login socket.io handler
 
+var Response = require('./response');
+
 var Login = function(io) {
     var self = this;
 
@@ -11,13 +13,17 @@ var Login = function(io) {
         self.socket = self.io
             .of('/login')
             .on('connection', function(socket) {
-                // Connected to login
-                // Use mud.login here
-                socket.on('connect', function(data) {
-                    console.log('client connected to login');
+                socket.on('auth', function(data) {
+                    socket.emit('auth', self.auth(data));
                 });
             });
     }
+   
+    self.auth = function(username, password) {
+        var resp = new Response(true, 'Authentication was successful', { username: username });
+        
+        return resp;
+    };
 
     return self;
 };

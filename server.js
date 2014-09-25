@@ -6,12 +6,10 @@ var logger  = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
 
-var io = require('socket.io')(app);
-
 var routes = require('./server/routes/index');
-var mud    = require('./server/src/mud');
 
-var app = express();
+var app  = express();
+var http = require('http').Server(app);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'server/views'));
@@ -32,25 +30,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// routes    
 app.use('/', routes);
 
-// socket io
-var world = io
-  .of('/world')
-  .on('connection', function (socket) {
-      // Connected to world
-      // Use mud.world here
-  });
-
-var login = io
-    .of('/login')
-    .on('connection', function(socket) {
-        // Connected to login
-        // Use mud.login here
-        socket.on('connect', function(data) {
-            console.log('client connected to login');
-        });
-    });
+// Our App
+var ServerApp  = require('./server/src/app')(app, http);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -85,5 +69,7 @@ app.use(function(err, req, res, next) {
     });
 });
 
-
-module.exports = app;
+module.exports = {
+    app  : app,
+    http : http
+};

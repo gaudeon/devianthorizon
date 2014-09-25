@@ -11,8 +11,8 @@ var ServerApp = function(express, http) {
         
         self.io      = require('socket.io').listen(http);
         
-        self.login   = require('./app/login')(self.io);
-        self.world   = require('./app/world')(self.io);
+        self.login   = require('./app/socket/login')(self.io);
+        self.world   = require('./app/socket/world')(self.io);
     }
 
     return self;

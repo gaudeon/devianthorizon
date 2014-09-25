@@ -9,8 +9,31 @@ var Login = (function() {
 
     function initialize() {
         self.socket = io.connect('/login');
-        //self.socket.emit('connect', { username: 'test' });
+        self.socket.emit('auth', { username: 'test' });
+        self.socket.on('auth', function(resp) {
+            self.pAuth = new Promise(function(resolve, reject) {
+                if(resp.success) {
+                    resolve(resp);
+                }
+                else {
+                    reject(Error(resp));
+                }
+            });
+        });
     }
+    
+    self.auth = function(username, password, callback) {
+        self.socket.emit('auth', {
+            username: username,
+            password: password
+        });
+        
+        if('function' === typeof callback) {
+            self.pAuth.then(function(resp) {
+                callback(resp);
+            });
+        }
+    };
 
     return self;
 });

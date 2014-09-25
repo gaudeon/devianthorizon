@@ -36,6 +36,13 @@ module.exports = function(grunt) {
             main: {
                 files: {
                     'build/main.js': ['client/src/main.js']
+                },
+                options: {
+                  transform: [
+                    ['hbsfy',{
+                        extensions: ['html']
+                    }]
+                  ],
                 }
             }
         },
