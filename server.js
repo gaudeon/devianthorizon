@@ -1,15 +1,21 @@
-var express = require('express');
-var path    = require('path');
-var favicon = require('serve-favicon');
-var logger  = require('morgan');
+// Load all the things
+var express      = require('express'),
+    path         = require('path'),
+    favicon      = require('serve-favicon'),
+    logger       = require('morgan'),
+    cookieParser = require('cookie-parser'),
+    bodyParser   = require('body-parser'),
+    routes       = require('./server/routes/index'),
+    mongoose     = require('mongoose'),
+    config       = require('./server/src/config'),
+    app          = express(),
+    http         = require('http').Server(app);
 
-var cookieParser = require('cookie-parser');
-var bodyParser   = require('body-parser');
-
-var routes = require('./server/routes/index');
-
-var app  = express();
-var http = require('http').Server(app);
+//connect to the db server:
+mongoose.connect('mongodb://' + config.mongo.host + '/' + config.mongo.db);
+mongoose.connection.on('open', function() {
+    console.log("Connected to Mongoose...");
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'server/views'));

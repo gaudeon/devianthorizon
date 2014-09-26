@@ -8,6 +8,8 @@ node.js
 
 ruby and sass gem
 
+mongodb
+
 ## Setup
 
 npm install
