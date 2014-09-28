@@ -2,8 +2,9 @@
 
 var Router = Marionette.AppRouter.extend({
     appRoutes: {
-        ''     : 'login',
-        'login': 'login'
+        ''         : 'login',
+        'login'    : 'login',
+        'register' : 'register'
     }
 });
 

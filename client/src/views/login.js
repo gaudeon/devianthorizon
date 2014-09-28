@@ -1,4 +1,4 @@
-// The login layout
+// The login view
 
 var LoginView = Backbone.Marionette.ItemView.extend({
     template: require('../../templates/login.html'),

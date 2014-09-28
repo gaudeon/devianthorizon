@@ -36,4 +36,6 @@ App.vent.on('login', function(data) {
     });
 });
 
+// TODO: handle registration
+
 module.exports = App;

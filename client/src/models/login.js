@@ -1,8 +1,10 @@
-// Model for the login layout
+// Model for the login view
 
 var LoginModel = Backbone.Model.extend({
     defaults: {
-        login_error: ''
+        login_error : '',
+        password    : '',
+        username    : ''
     }
 });
 

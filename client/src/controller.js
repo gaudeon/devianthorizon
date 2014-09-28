@@ -1,9 +1,15 @@
 // App Controller
 
-// -- Models
-var LoginModel = require('./models/login'),
-// -- Views
-    LoginView = require('./views/login');
+/*
+ * -- Models
+ */
+var LoginModel    = require('./models/login'),
+    RegisterModel = require('./models/register'),
+/*
+ * -- Views
+ */
+    LoginView    = require('./views/login'),
+    RegisterView = require('./views/register');
 
 var Controller = Marionette.Controller.extend({
 
@@ -15,15 +21,14 @@ var Controller = Marionette.Controller.extend({
         self.models      = {};
         self.collections = {};
         self.views       = {};
-        
-        // Login - it has a custom
-        self.views.login = new LoginView({
-            model: new LoginModel()
-        });
     },
     
     login: function() {
         var self = this;
+        
+        self.views.login = new LoginView({
+            model: new LoginModel()
+        });
         
         self.app.mainRegion.show(self.views.login);
     },
@@ -33,6 +38,16 @@ var Controller = Marionette.Controller.extend({
         
         self.views.login.model.set(data);
         self.views.login.render();
+    },
+    
+    register: function() {
+        var self = this;
+        
+        self.views.register = new RegisterView({
+            model: new RegisterModel()
+        });
+        
+        self.app.mainRegion.show(self.views.register);
     }
 
 });
