@@ -1,10 +1,7 @@
 // Entry point to mud client
 
-// -- Models
-var LoginModel = require('./models/login');
-
-// -- Views
-var LoginView = require('./views/login');
+var Controller = require('./controller'),
+    Router     = require('./router');
 
 var App = new (Marionette.Application.extend({
     regions: {
@@ -15,38 +12,15 @@ var App = new (Marionette.Application.extend({
 }))();
 
 App.addInitializer(function(options) {
-    App.router = new Marionette.AppRouter({
-        routes: {
-            ''     : 'login',
-            'login': 'login'
-        },
-        login: function() {
-            console.log('asdf');
-            App.mainRegion.show(App.views.login);
-        }
-    });
-});
-
-App.addInitializer(function(options) {
     App.socket = {
         login : require('./socket/login'),
         world : require('./socket/world')
     };
     
-    // -- Setup namespaces
-    App.models      = {};
-    App.collections = {};
-    App.views       = {};
-    
-    // Login - it has a custom
-    App.views.login = new LoginView({
-        model: new LoginModel()
-    });
+    App.controller = new Controller(App);
+    App.router     = new Router({ controller: App.controller });
     
     Backbone.history.start();
-    
-    if(window.location.hash == '')
-        App.router.navigate('login', { trigger: true });
 });
 
 // Channel communication
@@ -56,12 +30,8 @@ App.vent.on('login', function(data) {
             // Login successful
         }
         else {
-            App.views.login.model.set({
-                username: data.username,
-                password: data.password,
-                login_error: resp.message
-            });
-            App.views.login.render();
+            _.extend(data, { login_error: resp.message });
+            App.controller.loginUpdate(data);
         }
     });
 });
