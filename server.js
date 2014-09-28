@@ -10,9 +10,12 @@ var express      = require('express'),
     config       = require('./server/src/config'),
     app          = express(),
     http         = require('http').Server(app);
+    
+// enable trust proxy so req.ip works
+app.enable('trust proxy');
 
-//connect to the db server:
-mongoose.connect('mongodb://' + config.mongo.host + '/' + config.mongo.db);
+// connect to the db server:
+mongoose.connect('mongodb://' + config.mongo_host + '/' + config.mongo_db);
 mongoose.connection.on('open', function() {
     console.log("Connected to Mongoose...");
 });
@@ -29,18 +32,21 @@ app.engine('html', exphbs({
 app.set('view engine', 'html');
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(__dirname + '/public/favicon.ico'));
+// app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(cookieParser(config.cookie_secret)); // use cookie_secret for signed cookies
 app.use(express.static(path.join(__dirname, 'public')));
+
+// our App
+app.use(function(req, res, next){
+    var ServerApp = require('./server/src/app')(app, http, req, res);
+    next();
+});
 
 // routes    
 app.use('/', routes);
-
-// Our App
-var ServerApp  = require('./server/src/app')(app, http);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
