@@ -2,27 +2,48 @@
 
 var Response = require('./response');
 
-var Login = function(io) {
+var Login = function(app) {
     var self = this;
 
-    initialize(io);
+    initialize();
 
-    function initialize(io) {
-        self.io = io;
+    function initialize() {
+        self.app = app;
         
-        self.socket = self.io
+        self.socket = self.app.io
             .of('/login')
             .on('connection', function(socket) {
-                socket.on('auth', function(data) {
-                    socket.emit('auth', self.auth(data));
+                socket.on('auth', function(data, callback) {
+                    self.auth(data, function(resp) {
+                        callback(resp);
+                    });
                 });
             });
     }
    
-    self.auth = function(username, password) {
-        var resp = new Response(true, 'Authentication was successful', { username: username });
-        
-        return resp;
+    self.auth = function(data, callback) {
+        self.app.db.user.findOne({ username: data.username }, function(err, doc) {
+            var resp;
+            
+            if(err) {
+                resp = new Response(false, 'A database exception occurred while attempting to process your request', data);
+            }
+            else {
+                if(doc) {
+                    if(doc.checkPassword(data.password)) {
+                        resp = new Response(true, 'Authentication was successful', data);
+                    }
+                    else {
+                        resp = new Response(false, 'Invalid username or password', data);
+                    }
+                }
+                else {
+                    resp = new Response(false, 'Invalid username or password', data);
+                }
+            }
+            
+            callback(resp);
+        });
     };
 
     return self;

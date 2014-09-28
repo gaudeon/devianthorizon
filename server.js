@@ -17,7 +17,7 @@ app.enable('trust proxy');
 // connect to the db server:
 mongoose.connect('mongodb://' + config.mongo_host + '/' + config.mongo_db);
 mongoose.connection.on('open', function() {
-    console.log("Connected to Mongoose...");
+    // Connected to Mongoose...
 });
 
 // view engine setup

@@ -40,8 +40,8 @@ var ServerApp = function(express, http, request, response) {
         // -- Setup socket connections
         self.io      = require('socket.io').listen(http);
         
-        self.login   = require('./app/socket/login')(self.io);
-        self.world   = require('./app/socket/world')(self.io);
+        self.login   = require('./app/socket/login')(self);
+        self.world   = require('./app/socket/world')(self);
     }
     
     function newSession() {

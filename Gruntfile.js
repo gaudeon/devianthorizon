@@ -112,7 +112,7 @@ module.exports = function(grunt) {
 
         watch: {
             scripts: {
-                files: ['client/src/**/*.js'],
+                files: ['client/src/**/*.js', 'client/templates/**/*.html'],
                 tasks: ['clean:dev:src', 'browserify:main', 'concat', 'copy:dev']
             },
             sass: {

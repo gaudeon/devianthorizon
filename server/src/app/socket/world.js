@@ -1,14 +1,14 @@
 // World socket.io handler
 
-var World = function(io) {
+var World = function(app) {
     var self = this;
 
-    initialize(io);
+    initialize();
 
-    function initialize(io) {
-        self.io = io;
+    function initialize() {
+        self.app = app;
         
-        self.socket = self.io
+        self.socket = self.app.io
             .of('/world')
             .on('connection', function (socket) {
                 // Connected to world
