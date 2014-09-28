@@ -1,20 +1,24 @@
 <form class="register_form">
     <p>
-        <input type="text" name="first" value="{{ first }}" placeholder="First Name">
-        <input type="text" name="last" value="{{ last }}" placeholder="Last Name">
+        <input type="text" name="first_name" value="{{ first_name }}" placeholder="First Name">
+        <input type="text" name="last_name" value="{{ last_name }}" placeholder="Last Name">
+        <div class="error"><span>{{ first_name_error }}</span> <span>{{ last_name_error }}</span></div>
     </p>
     <p>
         <input type="text" name="email" value="{{ email }}" placeholder="Email Address">
+        <div class="error">{{ email_error }}</div>
     </p>
     <p>
         <input type="text" name="username" value="{{ username }}" placeholder="Desired Username">
+        <div class="error">{{ username_error }}</div>
     </p>
     <p>
         <input type="password" name="password" value="{{ password }}" placeholder="Enter Password">
         <input type="password" name="confirm_password" value="{{ confirm_password }}" placeholder="Confirm Password">
+        <div class="error"><span>{{ password_error }}</span> <span>{{ confirm_password_error }}</span></div>
     </p>
     <button type="button">Register</button>
-    <div class="error">{{ login_error }}</div>
+    <div class="error">{{ register_error }}</div>
 </form>
 <a href="#login">Back to login</a>
 <!-- TODO: add error handling -->

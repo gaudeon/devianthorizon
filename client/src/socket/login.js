@@ -11,12 +11,21 @@ var Login = (function() {
         self.socket = io.connect('/login');
     }
     
-    self.auth = function(username, password, callback) {
-        self.socket.emit('auth', {
-            username: username,
-            password: password
-        }, callback);
+    self.auth = function(data, callback) {
+        self.socket.emit(
+            'auth',
+            _.pick(data, ['username', 'password']),
+            callback
+        );
     };
+    
+    self.register = function(data, callback) {
+        self.socket.emit(
+            'register',
+            _.pick(data, ['first_name', 'last_name', 'email', 'username', 'password']) ,
+            callback
+        );
+    }
 
     return self;
 });

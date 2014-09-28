@@ -125,7 +125,7 @@ module.exports = function(grunt) {
             dev: {
                 script: 'bin/www',
                 options: {
-                    watch: ['server.js', 'server/src']
+                    watch: ['server.js', 'server/src', 'server/db', 'server/routes']
                 }
             }
         },

@@ -36,7 +36,7 @@ var Controller = Marionette.Controller.extend({
     loginUpdate: function(data) {
         var self = this;
         
-        self.views.login.model.set(data);
+        self.views.login.model.set(data, {validate: true});
         self.views.login.render();
     },
     
@@ -48,6 +48,13 @@ var Controller = Marionette.Controller.extend({
         });
         
         self.app.mainRegion.show(self.views.register);
+    },
+    
+    registerUpdate: function(data) {
+        var self = this;
+        
+        self.views.register.model.set(data, {validate: true});
+        self.views.register.render();
     }
 
 });

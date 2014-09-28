@@ -25,9 +25,9 @@ App.addInitializer(function(options) {
 
 // Channel communication
 App.vent.on('login', function(data) {
-    App.socket.login.auth(data.username, data.password, function(resp) {
+    App.socket.login.auth(data, function(resp) {
         if(resp.success === true) {
-            // Login successful
+            console.log('login success!');
         }
         else {
             _.extend(data, { login_error: resp.message });
@@ -36,6 +36,16 @@ App.vent.on('login', function(data) {
     });
 });
 
-// TODO: handle registration
+App.vent.on('register', function(data) {
+    App.socket.login.register(data, function(resp) {
+        if(resp.success === true) {
+            console.log('register success!');
+        }
+        else {
+            _.extend(data, { register_error: resp.message });
+            App.controller.registerUpdate(data);
+        }
+    });
+});
 
 module.exports = App;
