@@ -4,11 +4,13 @@
  * -- Models
  */
 var LoginModel    = require('./models/login'),
+    LobbyModel    = require('./models/lobby'),
     RegisterModel = require('./models/register'),
 /*
  * -- Views
  */
     LoginView    = require('./views/login'),
+    LobbyView    = require('./views/lobby'),
     RegisterView = require('./views/register');
 
 var Controller = Marionette.Controller.extend({
@@ -22,6 +24,8 @@ var Controller = Marionette.Controller.extend({
         self.collections = {};
         self.views       = {};
     },
+    
+    vent: Backbone.Wreqr.radio.channel('global').vent,
     
     login: function() {
         var self = this;
@@ -55,6 +59,24 @@ var Controller = Marionette.Controller.extend({
         
         self.views.register.model.set(data, {validate: true});
         self.views.register.render();
+    },
+    
+    lobby: function() {
+        var self = this;
+        
+        self.vent.trigger('lobby', function(resp) {
+            if(resp.success) {
+                self.views.lobby = new LobbyView({
+                    model: new LobbyModel(resp.data.result)
+                });
+                
+                self.app.mainRegion.show(self.views.lobby);
+            }
+            else {
+                self.app.router.navigate('login');
+                self.login();
+            }
+        });
     }
 
 });

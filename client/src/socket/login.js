@@ -25,7 +25,7 @@ var Login = (function() {
             _.pick(data, ['first_name', 'last_name', 'email', 'username', 'password']) ,
             callback
         );
-    }
+    };
 
     return self;
 });

@@ -19,10 +19,13 @@ var ServerApp = function(express, http, request, response) {
         
         // -- Load or create session
         if( self.request.signedCookies.mudjs_session && self.request.signedCookies.mudjs_session.token ) {
+            console.log(self.request.signedCookies);
             // try to load the session
             self.db.session.findOne({ ipAddress: self.client.ip, tokenString: self.request.signedCookies.mudjs_session.token }, function(err, doc) {
                 if(err)
                     throw err;
+                
+                console.log(doc);
                 
                 if(doc) {
                     self.client.session = doc;
@@ -41,6 +44,7 @@ var ServerApp = function(express, http, request, response) {
         self.io      = require('socket.io').listen(http);
         
         self.login   = require('./app/socket/login')(self);
+        self.lobby   = require('./app/socket/lobby')(self);
         self.world   = require('./app/socket/world')(self);
     }
     
@@ -60,10 +64,10 @@ var ServerApp = function(express, http, request, response) {
             throw "session not defined!";
         
         // Create/update session cookie        
-        self.response.cookie('mudjs_session', { token: self.client.session.get('tokenString') }, { expires: new Date(Date.now() + 1000 * 60 * 1), signed: true });
+        self.response.cookie('mudjs_session', { token: self.client.session.get('tokenString') }, { expires: new Date(Date.now() + 1000 * 60 * 60 * 1), signed: true });
         
         // Update session expiration
-        self.client.session.updateExpireDate();
+        self.client.session.set('expireDate', Date.now() );
     }
     
     return self;

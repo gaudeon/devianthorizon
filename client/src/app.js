@@ -14,6 +14,7 @@ var App = new (Marionette.Application.extend({
 App.addInitializer(function(options) {
     App.socket = {
         login : require('./socket/login'),
+        lobby : require('./socket/lobby'),
         world : require('./socket/world')
     };
     
@@ -27,7 +28,8 @@ App.addInitializer(function(options) {
 App.vent.on('login', function(data) {
     App.socket.login.auth(data, function(resp) {
         if(resp.success === true) {
-            console.log('login success!');
+            App.router.navigate('lobby');
+            App.controller.lobby();
         }
         else {
             _.extend(data, { login_error: resp.message });
@@ -39,12 +41,19 @@ App.vent.on('login', function(data) {
 App.vent.on('register', function(data) {
     App.socket.login.register(data, function(resp) {
         if(resp.success === true) {
-            console.log('register success!');
+            App.router.navigate('lobby');
+            App.controller.lobby();
         }
         else {
             _.extend(data, { register_error: resp.message });
             App.controller.registerUpdate(data);
         }
+    });
+});
+
+App.vent.on('lobby', function(callback) {
+    App.socket.lobby.userInfo(function(resp) {
+        callback(resp);
     });
 });
 

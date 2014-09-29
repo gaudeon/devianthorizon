@@ -1,5 +1,8 @@
 // World socket.io handler
 
+var Response = require('./response'),
+    _ = require('underscore');
+
 var World = function(app) {
     var self = this;
 

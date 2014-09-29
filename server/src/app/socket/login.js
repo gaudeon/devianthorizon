@@ -1,6 +1,7 @@
 // Login socket.io handler
 
-var Response = require('./response');
+var Response = require('./response'),
+    _ = require('underscore');
 
 var Login = function(app) {
     var self = this;
@@ -13,15 +14,12 @@ var Login = function(app) {
         self.socket = self.app.io
             .of('/login')
             .on('connection', function(socket) {
-                socket.on('auth', function(data, callback) {
-                    self.auth(data, function(resp) {
-                        callback(resp);
-                    });
-                });
-                
-                socket.on('register', function(data, callback) {
-                    self.register(data, function(resp) {
-                        callback(resp);
+                // Socket namespace hooks
+                _.each(['auth', 'register'], function(method) {
+                    socket.on(method, function(data, callback) {
+                        self[method](data, function(resp) {
+                            callback(resp);
+                        });
                     });
                 });
             });
@@ -39,7 +37,12 @@ var Login = function(app) {
                 if(doc) {
                     doc.checkPassword(data.password, function(err, isMatch) {
                         if(isMatch) {
-                            resp = new Response(true, 'Authentication was successful', { args: data });
+                            // Set the user in the session for later access
+                            var sessionData = self.app.client.session.get('sessionData') || {};
+                            sessionData.user = doc.toObject();
+                            self.app.client.session.set( 'sessionData', sessionData);
+                            
+                            resp = new Response(true, 'Authentication was successful', { args: data, result: doc });
                         }
                         else {
                             resp = new Response(false, 'Invalid username or password', { args: data });
@@ -81,7 +84,7 @@ var Login = function(app) {
                             resp = new Response(false, err.err || err, { args: data });
                         }
                         else {
-                            resp = new Response(true, 'Registration was successful', { args: data, data: doc });
+                            resp = new Response(true, 'Registration was successful', { args: data, result: doc });
                         }
                         
                         callback(resp);
