@@ -18,6 +18,22 @@ var Lobby = (function() {
             callback
         );
     };
+    
+    self.createCharacter = function(data, callback) {
+        self.socket.emit(
+            'createCharacter',
+            _.pick(data, ['full_name']),
+            callback
+        );
+    };
+    
+    self.characterList = function(callback) {
+        self.socket.emit(
+            'characterList',
+            {},
+            callback
+        );
+    };
 
     return self;
 });

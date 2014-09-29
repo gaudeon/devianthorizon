@@ -38,9 +38,10 @@ var Login = function(app) {
                     doc.checkPassword(data.password, function(err, isMatch) {
                         if(isMatch) {
                             // Set the user in the session for later access
-                            var sessionData = self.app.client.session.get('sessionData') || {};
+                            var sessionData = self.app.client.session.sessionData;
                             sessionData.user = doc.toObject();
-                            self.app.client.session.set( 'sessionData', sessionData);
+                            self.app.client.session.sessionData = sessionData;
+                            self.app.client.session.save();
                             
                             resp = new Response(true, 'Authentication was successful', { args: data, result: doc });
                         }
@@ -92,7 +93,7 @@ var Login = function(app) {
                 }
             }
         });
-    }
+    };
 
     return self;
 };

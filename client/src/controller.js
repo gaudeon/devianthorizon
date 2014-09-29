@@ -3,15 +3,26 @@
 /*
  * -- Models
  */
-var LoginModel    = require('./models/login'),
-    LobbyModel    = require('./models/lobby'),
-    RegisterModel = require('./models/register'),
+var CharacterModel       = require('./models/character'),
+    CreateCharacterModel = require('./models/create_character'),
+    LoginModel           = require('./models/login'),
+    LobbyModel           = require('./models/lobby'),
+    RegisterModel        = require('./models/register'),
+
+/*
+ * -- Collections
+ */
+    Characters   = require('./collections/characters'),
+
 /*
  * -- Views
  */
-    LoginView    = require('./views/login'),
-    LobbyView    = require('./views/lobby'),
-    RegisterView = require('./views/register');
+    CharacterView       = require('./views/character'),
+    CreateCharacterView = require('./views/create_character'),
+    LoginView           = require('./views/login'),
+    LoginView           = require('./views/login'),
+    LobbyView           = require('./views/lobby'),
+    RegisterView        = require('./views/register');
 
 var Controller = Marionette.Controller.extend({
 
@@ -64,19 +75,58 @@ var Controller = Marionette.Controller.extend({
     lobby: function() {
         var self = this;
         
-        self.vent.trigger('lobby', function(resp) {
-            if(resp.success) {
-                self.views.lobby = new LobbyView({
-                    model: new LobbyModel(resp.data.result)
+        // triggering lobby checks to make sure we are logged in
+        self.vent.trigger('lobby', function(lobbyResp) {
+            if(lobbyResp.success) {
+                self.vent.trigger('characterList', function(characterListResp) {
+                    self.views.lobby = new LobbyView({
+                        model: new LobbyModel(lobbyResp.data.result)
+                    });
+                    
+                    if(characterListResp.success) {
+                        _.each(characterListResp.data.result, function(o) {
+                            self.views.lobby.collection.add({
+                                id        : o._id,
+                                full_name : o.fullName,
+                                created   : (o.createdDate.split(/T/))[0]
+                            });
+                        });
+                    }
+                    
+                    self.app.mainRegion.show(self.views.lobby);
                 });
-                
-                self.app.mainRegion.show(self.views.lobby);
             }
             else {
                 self.app.router.navigate('login');
                 self.login();
             }
         });
+    },
+    
+    createCharacter: function() {
+        var self = this;
+        
+        // triggering lobby checks to make sure we are logged in
+        self.vent.trigger('lobby', function(resp) {
+            if(resp.success) {
+                self.views.create_character = new CreateCharacterView({
+                    model: new CreateCharacterModel()
+                });
+                
+                self.app.mainRegion.show(self.views.create_character);
+            }
+            else {
+                self.app.router.navigate('login');
+                self.login();
+            }
+        });
+    },
+    
+    createCharacterUpdate: function(data) {
+        var self = this;
+        
+        self.views.create_character.model.set(data, {validate: true});
+        self.views.create_character.render();
     }
 
 });

@@ -19,13 +19,10 @@ var ServerApp = function(express, http, request, response) {
         
         // -- Load or create session
         if( self.request.signedCookies.mudjs_session && self.request.signedCookies.mudjs_session.token ) {
-            console.log(self.request.signedCookies);
             // try to load the session
             self.db.session.findOne({ ipAddress: self.client.ip, tokenString: self.request.signedCookies.mudjs_session.token }, function(err, doc) {
                 if(err)
                     throw err;
-                
-                console.log(doc);
                 
                 if(doc) {
                     self.client.session = doc;
@@ -49,7 +46,9 @@ var ServerApp = function(express, http, request, response) {
     }
     
     function newSession() {
-        self.client.session = self.db.session.create({ ipAddress: self.client.ip }, function(err, doc) {
+        var expireNext = new Date(Date.now() + 1000 * 60 * 60 * 1);
+        
+        self.client.session = self.db.session.create({ ipAddress: self.client.ip, expireDate: expireNext }, function(err, doc) {
             if(err)
                 throw err;
             
@@ -63,11 +62,14 @@ var ServerApp = function(express, http, request, response) {
         if('undefined' === typeof self.client.session)
             throw "session not defined!";
         
+        var expireNext = new Date(Date.now() + 1000 * 60 * 60 * 1);
+        
         // Create/update session cookie        
-        self.response.cookie('mudjs_session', { token: self.client.session.get('tokenString') }, { expires: new Date(Date.now() + 1000 * 60 * 60 * 1), signed: true });
+        self.response.cookie('mudjs_session', { token: self.client.session.get('tokenString') }, { expires: expireNext, signed: true });
         
         // Update session expiration
-        self.client.session.set('expireDate', Date.now() );
+        self.client.session.expireDate = expireNext;
+        self.client.session.save();
     }
     
     return self;

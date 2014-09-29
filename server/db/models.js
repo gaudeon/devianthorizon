@@ -1,8 +1,9 @@
 // Store for all models
 
 var models = {
-    session : require('./models/session'),
-    user    : require('./models/user')
+    character : require('./models/character'),
+    session   : require('./models/session'),
+    user      : require('./models/user')
 };
 
 module.exports = models;

@@ -57,4 +57,23 @@ App.vent.on('lobby', function(callback) {
     });
 });
 
+App.vent.on('createCharacter', function(data) {
+    App.socket.lobby.createCharacter(data, function(resp) {
+        if(resp.success === true) {
+            App.router.navigate('lobby');
+            App.controller.lobby();
+        }
+        else {
+            _.extend(data, { general_error: resp.message });
+            App.controller.createCharacterUpdate(data);
+        }
+    });
+});
+
+App.vent.on('characterList', function(callback) {
+    App.socket.lobby.characterList(function(resp) {
+        callback(resp);
+    });
+});
+
 module.exports = App;
