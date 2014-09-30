@@ -4,9 +4,18 @@ var LoginView = Backbone.Marionette.ItemView.extend({
     template: require('../../templates/login.html'),
 
     events: {
-        'click button': 'login'
+        'click button': 'login',
+        'keyup input': 'loginEnter'
     },
-    
+
+    loginEnter: function(ev) {
+        var self = this;
+        var keyCode = ev.keyCode || ev.which;
+        if (keyCode == '13'){
+            self.login(ev);
+        }
+    },
+
     login: function(ev) {
         var self  = this;
         var radio = Backbone.Wreqr.radio.channel('global');
