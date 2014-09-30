@@ -5,7 +5,7 @@ var mongoose = require('mongoose'),
     Mixed = mongoose.Schema.Types.Mixed;
     
 var Character = new Schema({
-    ownedBy     : { type : ObjectId, ref : 'users' },
+    ownedBy     : { type : ObjectId, ref : 'User' },
     fullName    : { type : String , required : true },
     createdDate : { type : Date , required : true , default : Date.now }
 });

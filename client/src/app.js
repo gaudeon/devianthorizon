@@ -76,4 +76,10 @@ App.vent.on('characterList', function(callback) {
     });
 });
 
+App.vent.on('joinWorld', function(data, callback) {
+    App.socket.world.joinWorld(data,function(resp) {
+        callback(resp);
+    });
+});
+
 module.exports = App;

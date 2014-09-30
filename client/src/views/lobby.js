@@ -11,7 +11,22 @@ var LobbyView = Backbone.Marionette.CompositeView.extend({
     childView: CharacterView,
 
     events: {
+        'click .play_as_character' : 'joinWorld'
+    },
+    
+    joinWorld: function(ev) {
+        ev.preventDefault();
+        
+        var radio = Backbone.Wreqr.radio.channel('global');
+        
+        radio.vent.trigger('joinWorld', {
+            character : $(ev.target).data('id')
+        }, function(resp) {
+            console.log(resp.data.result.debug);
+        });
+        
     }
+    
 });
 
 module.exports = LobbyView;
