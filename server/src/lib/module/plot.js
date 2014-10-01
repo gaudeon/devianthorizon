@@ -11,6 +11,10 @@ var PlotModule = function(options) {
 
     function initialize() {
         self.type = 'undefined'; // Each plot must overwrite this to be their type, their type needs to be the same name as their file name
+        
+        self.name = 'undefined'; // Each plot must overwrite this to be their descriptive name
+        
+        self.shortDescription = ''; // Each plot may or may not overwrite this
 
         self.mergeOptions(options); // merge options
     }

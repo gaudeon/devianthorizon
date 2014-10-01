@@ -3,6 +3,8 @@
 var RegisterView = Backbone.Marionette.ItemView.extend({
     template: require('../../templates/register.html'),
 
+    className: 'register',
+    
     events: {
         'click button': 'register'
     },

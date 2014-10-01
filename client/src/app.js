@@ -78,6 +78,19 @@ App.vent.on('characterList', function(callback) {
 
 App.vent.on('joinWorld', function(data, callback) {
     App.socket.world.joinWorld(data,function(resp) {
+        App.router.navigate('game');
+        App.controller.game();
+    });
+});
+
+App.vent.on('enterWorld', function(callback) {
+    App.socket.world.enterWorld(function(resp) {
+        callback(resp);
+    });
+});
+
+App.vent.on('command', function(data, callback) {
+    App.socket.world.command(data, function(resp) {
         callback(resp);
     });
 });

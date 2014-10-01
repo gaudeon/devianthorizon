@@ -1,7 +1,8 @@
 // Lobby socket.io handler
 
 var Response = require('./response'),
-    _ = require('underscore');
+    _ = require('underscore'),
+    CharacterModule = require('../../lib/module/character');
 
 var Lobby = function(app) {
     var self = this;
@@ -62,19 +63,18 @@ var Lobby = function(app) {
                     callback(resp);
                 }
                 else {
-                    self.app.db.character.create({
-                        ownedBy  : self.app.client.session.sessionData.user._id,  
-                        fullName : data.full_name
-                    }, function(err, doc) {
-                        if(err) {
-                            resp = new Response(false, err.err || err, { args: data });
-                        }
-                        else {
-                            resp = new Response(true, 'Character created successfully', { args: data, result: doc });
-                        }
-                        
-                        callback(resp);
-                    });
+                    try {
+                        new CharacterModule().createMe({
+                            ownedBy  : self.app.client.session.sessionData.user._id,  
+                            fullName : data.full_name
+                        }, function(character) {
+                            resp = new Response(true, 'Character created successfully', { args: data, result: character.model });
+                            callback(resp);
+                        });
+                    }
+                    catch(err) {
+                        resp = new Response(false, err.err || err, { args: data });
+                    }
                 }
             }
         });

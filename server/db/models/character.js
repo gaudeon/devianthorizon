@@ -7,6 +7,7 @@ var mongoose = require('mongoose'),
 var Character = new Schema({
     ownedBy     : { type : ObjectId, ref : 'User' },
     fullName    : { type : String , required : true },
+    place       : { type: Schema.ObjectId, ref: 'Place' },
     createdDate : { type : Date , required : true , default : Date.now }
 });
 

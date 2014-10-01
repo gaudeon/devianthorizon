@@ -1,0 +1,27 @@
+.character {
+    font: $web_font;
+    border-bottom: solid black 1px;
+    padding: 1em;
+    
+    div {
+        position: relative;
+        
+        .full-name {
+            font-size: 2em;
+        }
+        
+        button {
+            display: block;
+            position: absolute;
+            top: .15em;
+            right: 0;
+            font-size: 2em;
+            padding: .25em;
+            border-radius: .25em;
+        }
+    }
+    
+    &:last-child {
+        border: none;
+    }
+}

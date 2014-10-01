@@ -1,0 +1,27 @@
+.game {
+    #console {
+        background-color: $game_bgcolor;
+        color: $game_fgcolor;
+        font: $game_font;
+        width: 90%;
+        height: 700px;
+        margin: 0 auto;
+        padding: 1em .5em;
+        overflow: scroll;
+    }
+    
+    #command {
+        background-color: $game_bgcolor;
+        color: $game_fgcolor;
+        font: $game_font;
+        display: block;
+        line-height: 2em;
+        border-top: inset $game_fgcolor 2px;
+        border-bottom: inset $game_fgcolor 2px;
+        border-left: none;
+        border-right: none;
+        width: 90%;
+        margin: 0 auto;
+        
+    }
+}

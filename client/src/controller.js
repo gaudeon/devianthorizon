@@ -5,6 +5,7 @@
  */
 var CharacterModel       = require('./models/character'),
     CreateCharacterModel = require('./models/create_character'),
+    GameModel            = require('./models/game'),
     LoginModel           = require('./models/login'),
     LobbyModel           = require('./models/lobby'),
     RegisterModel        = require('./models/register'),
@@ -19,7 +20,7 @@ var CharacterModel       = require('./models/character'),
  */
     CharacterView       = require('./views/character'),
     CreateCharacterView = require('./views/create_character'),
-    LoginView           = require('./views/login'),
+    GameView            = require('./views/game'),
     LoginView           = require('./views/login'),
     LobbyView           = require('./views/lobby'),
     RegisterView        = require('./views/register');
@@ -127,6 +128,16 @@ var Controller = Marionette.Controller.extend({
         
         self.views.create_character.model.set(data, {validate: true});
         self.views.create_character.render();
+    },
+    
+    game: function() {
+        var self = this;
+        
+        self.views.game = new GameView({
+            model: new GameModel()
+        });
+        
+        self.app.mainRegion.show(self.views.game);
     }
 
 });

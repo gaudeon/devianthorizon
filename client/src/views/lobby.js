@@ -6,6 +6,8 @@ var Characters    = require('../collections/characters'),
 var LobbyView = Backbone.Marionette.CompositeView.extend({
     template: require('../../templates/lobby.html'),
     
+    className: 'lobby',
+    
     collection: new Characters(),
     
     childView: CharacterView,
@@ -22,7 +24,7 @@ var LobbyView = Backbone.Marionette.CompositeView.extend({
         radio.vent.trigger('joinWorld', {
             character : $(ev.target).data('id')
         }, function(resp) {
-            console.log(resp.data.result.debug);
+            console.log(resp.data.result);
         });
         
     }

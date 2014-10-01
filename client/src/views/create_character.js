@@ -3,6 +3,8 @@
 var CreateCharacterView = Backbone.Marionette.ItemView.extend({
     template: require('../../templates/create_character.html'),
 
+    className: 'create-character',
+    
     events: {
         'click button': 'create'
     },

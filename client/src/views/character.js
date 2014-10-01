@@ -4,6 +4,8 @@
 
 var CharacterView = Backbone.Marionette.ItemView.extend({
     template: require('../../templates/character.html'),
+    
+    className: 'character',
 
     events: {
     },

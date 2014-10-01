@@ -1,0 +1,35 @@
+// Variables
+$game_bgcolor: #000;
+$game_fgcolor: #CFCFCF;
+$game_font: 16px sans-serif;
+$web_font: 14px sans-serif;
+$link_color: #000;
+
+// global styles
+
+* {
+    box-sizing: border-box;
+}
+
+input, button, select, option, textarea {
+    font: $web_font;
+}
+
+a {
+    color: $link_color;
+}
+
+h1 {
+    padding: .5em;
+    margin: 0;
+    border: solid #aaa 1px;
+    font-size: 18px;
+}
+
+// view styles
+@import "views/character.scss"; 
+@import "views/create_character.scss"; 
+@import "views/game.scss"; 
+@import "views/lobby.scss"; 
+@import "views/login.scss"; 
+@import "views/register.scss";

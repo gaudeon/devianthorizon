@@ -3,6 +3,8 @@
 var LoginView = Backbone.Marionette.ItemView.extend({
     template: require('../../templates/login.html'),
 
+    className: 'login',
+    
     events: {
         'click button': 'login',
         'keyup input': 'loginEnter'

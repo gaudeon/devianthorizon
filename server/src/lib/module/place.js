@@ -19,6 +19,18 @@ var PlaceModule = function(args) {
     self.findMe = function(args, callback) {
         var check = self.validate(findMe__meta(), args);
         if(! check.is_valid) throw check.errors();
+        
+        PlaceModel.findById(args.id, function(err, doc) {
+            if(err) throw err;
+            
+            if(! doc) throw "Place not found!";
+            
+            self.model = doc;
+            
+            self.plot = new (new Plot().typeMap(doc.type))();
+            
+            if('function' === typeof callback) callback(self);
+        });
     };
 
     function createMe__meta() {
@@ -51,12 +63,49 @@ var PlaceModule = function(args) {
             'is_area_gate'
         ]), function(err, doc) {
             if(err) throw err;
+            
             self.model = doc;
 
             self.plot = new (new Plot().typeMap(doc.type))();
 
             if('function' === typeof callback) callback(self);
         });
+    };
+    
+    self.addCharacter = function(character, callback) {
+        // Add a character to this place
+        var id = (character.model) ? character.model.id : character.id;
+        if(! id) throw "No place id found!";
+        
+        self.model.characters.push(id);
+        self.model.save(function(err) {
+            if(err) throw err;
+            
+            if('function' === typeof callback) callback();
+        });
+    };
+    
+    self.removeCharacter = function(character, callback) {
+        // Add a character to this place
+        var id = (character.model) ? character.model.id : character.id;
+        if(! id) throw "No place id found!";
+        
+        self.model.characters.pull(id);
+        self.model.save(function(err) {
+            if(err) throw err;
+            
+            if('function' === typeof callback) callback();
+        });
+    };
+    
+    // Summary of what is in this place
+    self.summary = function() {
+        var output = '';
+        
+        output = output + self.plot.name + "{{ br() }}{{ br () }}";
+        output = output + self.plot.shortDescription + "{{ br() }}{{ br () }}";
+        
+        return output;
     };
 
     return self;

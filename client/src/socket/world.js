@@ -18,6 +18,22 @@ var World = (function() {
             callback
         );
     };
+    
+    self.enterWorld = function(callback) {
+        self.socket.emit(
+            'enterWorld',
+            {},
+            callback
+        );
+    };
+    
+    self.command = function(data, callback) {
+        self.socket.emit(
+            'command',
+            _.pick(data, ['command']),
+            callback
+        );
+    };
 
     return self;
 });

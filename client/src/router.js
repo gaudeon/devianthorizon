@@ -6,7 +6,8 @@ var Router = Marionette.AppRouter.extend({
         'login'            : 'login',
         'register'         : 'register',
         'lobby'            : 'lobby',
-        'createCharacter'  : 'createCharacter'
+        'createCharacter'  : 'createCharacter',
+        'game'             : 'game'
     }
 });
 

@@ -1,7 +1,10 @@
+<h1>Welcome, please sign in.</h1>
 <form class="login_form">
-    <input type="text" name="username" value="{{ username }}" placeholder="Username">
-    <input type="password" name="password" value="{{ password }}" placeholder="Password">
-    <button type="button">Login</button>
+    <p>
+        <input type="text" name="username" value="{{ username }}" placeholder="Username">
+        <input type="password" name="password" value="{{ password }}" placeholder="Password">
+        <button type="button">Login</button>
+    </p>
     <div class="error">{{ login_error }}</div>
 </form>
 <a href="#register">Register</a>
