@@ -27,9 +27,9 @@ var World = (function() {
         );
     };
     
-    self.command = function(data, callback) {
+    self.execCommand = function(data, callback) {
         self.socket.emit(
-            'command',
+            'execCommand',
             _.pick(data, ['command']),
             callback
         );

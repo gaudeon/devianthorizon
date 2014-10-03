@@ -6,6 +6,7 @@ var GameView = Backbone.Marionette.ItemView.extend({
     className: 'game',
 
     events: {
+        'keyup #command': 'execCommand'
     },
     
     initialize: function() {
@@ -21,7 +22,11 @@ var GameView = Backbone.Marionette.ItemView.extend({
         var radio = Backbone.Wreqr.radio.channel('global');
         radio.vent.trigger('enterWorld', function(resp) {
             
-            self.addToConsole("Welcome " + resp.data.result.character.fullName + "!{{ br() }}{{ br() }}" + resp.data.result.output);
+            // Save world data for later use
+            self.character = resp.data.result.character;
+            self.place     = resp.data.result.place;
+            
+            self.addToConsole("Welcome " + self.character.fullName + "!{{ br() }}{{ br() }}" + resp.data.result.output);
         });
     },
     
@@ -52,7 +57,55 @@ var GameView = Backbone.Marionette.ItemView.extend({
                 return '<br>';
             }
         };
+    },
+    
+    execCommand: function(ev) {
+        var self = this;
+        var keyCode = ev.keyCode || ev.which;
+        
+        // Process command on enter
+        if (keyCode == '13') {
+            var command = self.$command.val();
+            
+            // empty command input        
+            self.$command.val('');
+            
+            //clean up command
+            var filters = self.commandFilters();
+            for(var q = 0; q < filters.length; q += 2) {
+                var re = filters[q];
+                command = command.replace(re, filters[q + 1]);
+            }
+            
+            if(command.match(/\w/)) {
+                // print it out before sending
+                self.addToConsole('> ' + command + '{{ br() }}{{ br() }}');
+                
+                var radio = Backbone.Wreqr.radio.channel('global');
+                radio.vent.trigger('execCommand', { command: command }, function(resp) {
+                    
+                    // Save world data for later use
+                    self.character = resp.data.result.character;
+                    self.place     = resp.data.result.place;
+                    
+                    self.addToConsole("Welcome " + self.character.fullName + "!{{ br() }}{{ br() }}" + resp.data.result.output);
+                });
+            }
+        }
+    },
+    
+    commandFilters: function() {
+        return  [
+            new RegExp('^\s*'), '',               // whitespace
+            new RegExp('\{\{','g'), '',           // _ template interpolation
+            new RegExp('\}\}','g'), '',           // _ template interpolation
+            new RegExp('<(?:.|\\n)*?>','gm'), '', // html
+            new RegExp('&(?:.|\\n)*?;','gm'), '', // html entities
+            new RegExp('<','g'), '&lt;',          // encode <
+            new RegExp('>','g'), '&gt;'           // encode >
+        ];
     }
+    
 });
 
 module.exports = GameView;

@@ -17,7 +17,7 @@ var World = function(app) {
             .of('/world')
             .on('connection', function (socket) {
                 // Connected to world
-                _.each(['joinWorld','enterWorld','command'], function(method) {
+                _.each(['joinWorld','enterWorld','execCommand'], function(method) {
                     socket.on(method, function(data, callback) {
                         self[method](data, function(resp) {
                             if('function' === typeof callback) callback(resp);
@@ -81,8 +81,8 @@ var World = function(app) {
     };
     
     // client sent command
-    self.command = function(data, callback) {
-        
+    self.execCommand = function(data, callback) {
+        // TODO: create command parser module and call it here (command parser should have sub modules that handle the variety of commands by function)
     }
     
     return self;

@@ -53,6 +53,7 @@ App.vent.on('register', function(data) {
 
 App.vent.on('lobby', function(callback) {
     App.socket.lobby.userInfo(function(resp) {
+        if(resp.success) App.session = resp.data.result; // Save the session data for later use
         callback(resp);
     });
 });
@@ -89,8 +90,8 @@ App.vent.on('enterWorld', function(callback) {
     });
 });
 
-App.vent.on('command', function(data, callback) {
-    App.socket.world.command(data, function(resp) {
+App.vent.on('execCommand', function(data, callback) {
+    App.socket.world.execCommand(data, function(resp) {
         callback(resp);
     });
 });

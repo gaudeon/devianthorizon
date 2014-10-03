@@ -31,16 +31,25 @@ var Lobby = function(app) {
         var sessionUser = self.app.client.session.sessionUser();
         
         if(sessionUser) {
+            var r = {
+                id          : sessionUser._id,
+                first_name  : sessionUser.firstName,
+                last_name   : sessionUser.lastName,
+                email       : sessionUser.emailAddress,
+                username    : sessionUser.userName,
+                created     : sessionUser.createdDate
+            };
+            
+            var sessionCharacter = self.app.client.session.sessionCharacter();
+            
+            if(sessionCharacter) {
+                r.character_id   = sessionCharacter._id;
+                r.character_name = sessionCharacter.fullName;
+            }
+            
             resp = new Response(true, 'UserInfo found.', {
                 args: data,
-                result: {
-                    id          : sessionUser._id,
-                    first_name  : sessionUser.firstName,
-                    last_name   : sessionUser.lastName,
-                    email       : sessionUser.emailAddress,
-                    username    : sessionUser.userName,
-                    created     : sessionUser.createdDate
-                }
+                result: r
             });
         } else {
             resp = new Response(false, 'User is not logged in.', { args: data });
