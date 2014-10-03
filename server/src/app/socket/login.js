@@ -38,18 +38,16 @@ var Login = function(app) {
                     doc.checkPassword(data.password, function(err, isMatch) {
                         if(isMatch) {
                             // Set the user in the session for later access
-                            var sessionData = self.app.client.session.sessionData;
-                            sessionData.user = doc.toObject();
-                            self.app.client.session.sessionData = sessionData;
-                            self.app.client.session.save();
+                            self.app.client.session.sessionUser( doc.toObject(), function(userSession) {
+                                resp = new Response(true, 'Authentication was successful', { args: data, result: userSession });
+                                callback(resp);
+                            });
                             
-                            resp = new Response(true, 'Authentication was successful', { args: data, result: doc });
                         }
                         else {
                             resp = new Response(false, 'Invalid username or password', { args: data });
+                            callback(resp);
                         }
-                        
-                        callback(resp);
                     });
                 }
                 else {

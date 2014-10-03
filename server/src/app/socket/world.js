@@ -40,10 +40,7 @@ var World = function(app) {
                 
                 character.setPlace(place, function() {
                     // Set the character in the session for later access
-                    var sessionData = self.app.client.session.sessionData;
-                    sessionData.character = character.model.toObject();
-                    self.app.client.session.sessionData = sessionData;
-                    self.app.client.session.save();
+                    self.app.client.session.sessionCharacter( character.model.toObject() );
                     
                     resp = new Response(true, 'Character logged in.', {
                         args: data,
@@ -62,13 +59,10 @@ var World = function(app) {
     
     // game interface is active, show welcome message and current place
     self.enterWorld = function(data, callback) {
-        new CharacterModule().findMe({ id: self.app.client.session.sessionData.character._id }, function(character) {
+        new CharacterModule().findMe({ id: self.app.client.session.sessionCharacter()._id }, function(character) {
             self.the_world.enterPlace(character, { id: character.model.place }, function(resp) {
                 // Update character
-                var sessionData = self.app.client.session.sessionData;
-                sessionData.character = resp.character.model.toObject();
-                self.app.client.session.sessionData = sessionData;
-                self.app.client.session.save();
+                self.app.client.session.sessionCharacter( resp.character.model.toObject() );
                 
                 // Send response
                 resp = new Response(true, 'Character entered world.', {

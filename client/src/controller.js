@@ -133,11 +133,20 @@ var Controller = Marionette.Controller.extend({
     game: function() {
         var self = this;
         
-        self.views.game = new GameView({
-            model: new GameModel()
+        // triggering lobby checks to make sure we are logged in
+        self.vent.trigger('lobby', function(resp) {
+            if(resp.success) {
+                self.views.game = new GameView({
+                    model: new GameModel()
+                });
+                
+                self.app.mainRegion.show(self.views.game);
+            }
+            else {
+                self.app.router.navigate('login');
+                self.login();
+            }
         });
-        
-        self.app.mainRegion.show(self.views.game);
     }
 
 });

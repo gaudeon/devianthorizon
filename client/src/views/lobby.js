@@ -24,7 +24,7 @@ var LobbyView = Backbone.Marionette.CompositeView.extend({
         radio.vent.trigger('joinWorld', {
             character : $(ev.target).data('id')
         }, function(resp) {
-            console.log(resp.data.result);
+            // Do nothing, navigation should change to game...
         });
         
     }

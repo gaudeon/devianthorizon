@@ -28,18 +28,18 @@ var Lobby = function(app) {
     
     self.userInfo = function(data, callback) {
         var resp;
-        var sessionData = self.app.client.session.sessionData || {};
+        var sessionUser = self.app.client.session.sessionUser();
         
-        if(sessionData.user) {
+        if(sessionUser) {
             resp = new Response(true, 'UserInfo found.', {
                 args: data,
                 result: {
-                    id          : sessionData.user._id,
-                    first_name  : sessionData.user.firstName,
-                    last_name   : sessionData.user.lastName,
-                    email       : sessionData.user.emailAddress,
-                    username    : sessionData.user.userName,
-                    created     : sessionData.user.createdDate
+                    id          : sessionUser._id,
+                    first_name  : sessionUser.firstName,
+                    last_name   : sessionUser.lastName,
+                    email       : sessionUser.emailAddress,
+                    username    : sessionUser.userName,
+                    created     : sessionUser.createdDate
                 }
             });
         } else {
@@ -65,7 +65,7 @@ var Lobby = function(app) {
                 else {
                     try {
                         new CharacterModule().createMe({
-                            ownedBy  : self.app.client.session.sessionData.user._id,  
+                            ownedBy  : self.app.client.session.sessionUser()._id,  
                             fullName : data.full_name
                         }, function(character) {
                             resp = new Response(true, 'Character created successfully', { args: data, result: character.model });
@@ -81,7 +81,7 @@ var Lobby = function(app) {
     };
     
     self.characterList = function(data, callback) {
-        self.app.db.character.find({ ownedBy: self.app.client.session.sessionData.user._id }, function(err, docs) {
+        self.app.db.character.find({ ownedBy: self.app.client.session.sessionUser()._id }, function(err, docs) {
             var resp;
             
             if(err) {
