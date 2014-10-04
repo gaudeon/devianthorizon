@@ -2,55 +2,55 @@
 
 var GameView = Backbone.Marionette.ItemView.extend({
     template: require('../../templates/game.html'),
-    
+
     className: 'game',
 
     events: {
         'keyup #command': 'execCommand'
     },
-    
+
     initialize: function() {
         var self = this;
     },
-    
+
     onShow: function() {
         var self = this;
-        
+
         self.$console = $(self.$el.find('#console'));
         self.$command = $(self.$el.find('#command'));
-        
+
         var radio = Backbone.Wreqr.radio.channel('global');
         radio.vent.trigger('enterWorld', function(resp) {
-            
+
             // Save world data for later use
             self.character = resp.data.result.character;
             self.place     = resp.data.result.place;
-            
+
             self.addToConsole("Welcome " + self.character.fullName + "!{{ br() }}{{ br() }}" + resp.data.result.output);
         });
     },
-    
+
     addToConsole: function(output) {
         var self = this;
-        
+
         self.$console.html( self.$console.html() + self.parse(output) );
     },
-    
+
     parse: function(html) {
         var self = this;
-        
+
         var oldSettings = _.templateSettings;
         _.templateSettings = {
             interpolate: /\{\{(.+?)\}\}/g
         };
-        
+
         var parsed = (_.template(html))(self.templateEnv());
-        
+
         _.templateSettings = oldSettings;
-        
+
         return parsed;
     },
-    
+
     templateEnv: function() {
         return {
             br: function() {
@@ -58,42 +58,49 @@ var GameView = Backbone.Marionette.ItemView.extend({
             }
         };
     },
-    
+
     execCommand: function(ev) {
         var self = this;
         var keyCode = ev.keyCode || ev.which;
-        
+
         // Process command on enter
         if (keyCode == '13') {
             var command = self.$command.val();
-            
-            // empty command input        
+
+            // empty command input
             self.$command.val('');
-            
+
             //clean up command
             var filters = self.commandFilters();
             for(var q = 0; q < filters.length; q += 2) {
                 var re = filters[q];
                 command = command.replace(re, filters[q + 1]);
             }
-            
+
             if(command.match(/\w/)) {
                 // print it out before sending
                 self.addToConsole('> ' + command + '{{ br() }}{{ br() }}');
-                
+
                 var radio = Backbone.Wreqr.radio.channel('global');
                 radio.vent.trigger('execCommand', { command: command }, function(resp) {
-                    
-                    // Save world data for later use
-                    self.character = resp.data.result.character;
-                    self.place     = resp.data.result.place;
-                    
-                    self.addToConsole("Welcome " + self.character.fullName + "!{{ br() }}{{ br() }}" + resp.data.result.output);
+                    if(resp.success) {
+                        if(resp.data.result && resp.data.result.character)
+                            self.character = resp.data.result.character;
+
+                        if(resp.data.result && resp.data.result.place)
+                            self.place = resp.data.result.place;
+
+                        if(resp.data.result && resp.data.result.output)
+                            self.addToConsole(resp.data.result.output + '{{br()}}{{br()}}');
+                    }
+                    else {
+                        self.addToConsole(resp.message + '{{br()}}{{br()}}');
+                    }
                 });
             }
         }
     },
-    
+
     commandFilters: function() {
         return  [
             new RegExp('^\s*'), '',               // whitespace
@@ -105,7 +112,7 @@ var GameView = Backbone.Marionette.ItemView.extend({
             new RegExp('>','g'), '&gt;'           // encode >
         ];
     }
-    
+
 });
 
 module.exports = GameView;
