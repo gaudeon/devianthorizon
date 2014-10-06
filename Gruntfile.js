@@ -110,6 +110,20 @@ module.exports = function(grunt) {
             }
         },
 
+        simplemocha: {
+            options: {
+                globals: ['expect','sinon'],
+                timeout: 3000,
+                ignoreLeaks: false,
+                ui: 'bdd',
+                reporter: 'tap'
+            },
+
+            server: {
+                src: ['t/server/helper.js', 't/server/**/*.test.js']
+            }
+        },
+
         watch: {
             scripts: {
                 files: ['client/src/**/*.js', 'client/templates/**/*.html'],
@@ -150,4 +164,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask('server', ['dev', 'concurrent:dev']);
     grunt.registerTask('default', 'server');
+
+    // testing tasks
+    grunt.registerTask('server:test', 'simplemocha');
 };
