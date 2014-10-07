@@ -21,9 +21,6 @@ var RegionModule = function(args) {
         var check = self.validate(findMe__meta(), args);
         if(! check.is_valid) throw check.errors();
 
-        var check = self.validate(findMe__meta(), args);
-        if(! check.is_valid) throw check.errors();
-        
         RegionModel.findById(args.id, function(err, doc) {
             if(err) throw err;
             

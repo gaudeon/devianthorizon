@@ -7,9 +7,7 @@ var Response = require('./response'),
 var Lobby = function(app) {
     var self = this;
 
-    initialize();
-
-    function initialize() {
+    self.initialize = function() {
         self.app = app;
         
         self.socket = self.app.io
@@ -24,7 +22,7 @@ var Lobby = function(app) {
                     });
                 });
             });
-    }
+    };
     
     self.userInfo = function(data, callback) {
         var resp;
@@ -81,8 +79,8 @@ var Lobby = function(app) {
                             callback(resp);
                         });
                     }
-                    catch(err) {
-                        resp = new Response(false, err.err || err, { args: data });
+                    catch(error) {
+                        resp = new Response(false, error.err || error, { args: data });
                     }
                 }
             }
@@ -103,6 +101,8 @@ var Lobby = function(app) {
              callback(resp);
         });
     };
+    
+    self.initialize();
 
     return self;
 };

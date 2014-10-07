@@ -1,8 +1,10 @@
 // Dirt Road Plot
 
-var Plot = require('../plot');
+var Plot = require('../plot'),
+    Data = require('../../data/plot/dirt_road'),
+    _    = require('underscore');
 
-var DirtRoadPlot = function(options) {
+var DirtRoadPlot = function() {
     var self = new Plot();
 
     initialize();
@@ -10,26 +12,9 @@ var DirtRoadPlot = function(options) {
     function initialize() {
         self.type = 'dirt_road';
         
-        self.name = names()[ Math.floor( Math.random() * names().length ) ];
-        
-        self.shortDescription = shortDescriptions()[ Math.floor( Math.random() * shortDescriptions().length ) ];
-
-        self.mergeOptions(options); // merge options
+        _.extend(self, Data);
     }
     
-    function names() {
-        return [
-            'Dirt Road',
-        ];
-    }
-    
-    function shortDescriptions() {
-        return [
-            'The road you are upon is made of well-trod dirt.',
-            'The stretch of dirt road before you is barren and dusty.',
-        ];
-    }
-
     return self;
 };
 

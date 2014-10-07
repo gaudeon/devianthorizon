@@ -10,11 +10,6 @@ var Module       = require('../module'),
 var WorldModule = function() {
     var self = new Module();
 
-    initialize();
-
-    function initialize() {
-    }
-
     // Find spawn point
     self.findSpawnPoint = function(callback) {
         Models.place.findOne({ is_spawn_point: true }, 'id', function(err, doc) {
@@ -39,7 +34,7 @@ var WorldModule = function() {
     
     // Called whenever a new place is entered
     self.enterPlace = function(character, place, callback) {
-        var id = (place.model) ? place.model.id : place.id;
+        var id = (place.model) ? (place.model._id || place.model.id) : (place._id || place.id);
         if(! id) throw "No place id found!";
         
         new PlaceModule().findMe({ id: id }, function(place) {

@@ -2,15 +2,13 @@
 
 var Biome = require('../biome');
 
-var VillageBiome = function(options) {
+var VillageBiome = function() {
     var self = new Biome();
 
     initialize();
 
     function initialize() {
         self.type = 'village';
-
-        self.mergeOptions(options); // merge options
 
         self.buildRule({
             rule: 'plot_count_modifier',

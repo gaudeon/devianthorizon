@@ -6,9 +6,7 @@ var Response = require('./response'),
 var Login = function(app) {
     var self = this;
 
-    initialize();
-
-    function initialize() {
+    self.initialize = function() {
         self.app = app;
         
         self.socket = self.app.io
@@ -23,7 +21,7 @@ var Login = function(app) {
                     });
                 });
             });
-    }
+    };
    
     self.auth = function(data, callback) {
         self.app.db.user.findOne({ userName: data.username }, function(err, doc) {
@@ -92,6 +90,8 @@ var Login = function(app) {
             }
         });
     };
+    
+    self.initialize();
 
     return self;
 };

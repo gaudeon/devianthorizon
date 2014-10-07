@@ -19,7 +19,7 @@ var Module = function() {
                         _.keys(self),
                         function(k) { var patt = /_error$/i; return patt.test(k); }
                     ),
-                    function(k) { str = str + ' ' + self[k] }
+                    function(k) { str = str + ' ' + self[k]; }
                 );
                 return str;
             };
@@ -64,13 +64,6 @@ var Module = function() {
         });
 
         return result;
-    };
-
-    // Useful if object has an options object and needs options merged in
-    self.mergeOptions = function(options) {
-        // merge options
-        if('object' !== typeof(self.options)) self.options = {};
-        _.extend(self.options, options || {});
     };
 
     return self;

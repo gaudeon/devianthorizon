@@ -1,15 +1,17 @@
 // Command parsing and execution
 
-var Module = require('../module'),
-    _      = require('underscore');
+var Module  = require('../module'),
+    _       = require('underscore'),
+    LookCmd = require('./command/look');
 
-var KernelModule = function(options) {
+var KernelModule = function(world) {
     var self = new Module();
-
-    // build search index for commands
-    self.buildCommandIndex = function() {
+    
+    self.initialize = function() {
+        self.world = world;
         self.index = {};
 
+        // build search index for commands
         for(var i = 0; i < self.commands.length; i++) {
             var cmd = self.commands[i];
             for(var w = 0; w <  cmd.indexes.length; w++) {
@@ -27,10 +29,10 @@ var KernelModule = function(options) {
     };
 
     // find and run a command based on the command line provided
-    self.parse = function(cmdLine) {
+    self.parse = function(cmdLine, character, callback) {
         var word     = (cmdLine.split(/\s+/))[0];
         var commands = [];
-
+        
         // Find commands that meet the criteria
         for(var c = 0; c < word.length; c++) {
             if(self.index[ word ])
@@ -51,22 +53,18 @@ var KernelModule = function(options) {
         }
 
         if('undefined' === typeof cmdFound)
-            return { output: 'Command not found' };
-
+            throw 'Command not found';
+        
         // Execute it
-        return cmdFound.execute(cmdLine);
+        cmdFound.execute(cmdLine, character, callback);
     };
 
     // list of command objects
     self.commands = [
-        require('./command/look')
+        new LookCmd(world)
     ];
-
-    function initialize() {
-        self.buildCommandIndex();
-    }
-
-    initialize();
+    
+    self.initialize();
 
     return self;
 };

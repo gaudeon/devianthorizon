@@ -2,7 +2,7 @@
 
 var Module = require('../module');
 
-var CommandModule = function(options) {
+var CommandModule = function() {
     var self = new Module();
 
     // This should be overwritten with a unique id for the command (e.g. the look command and synonyms could have the id 'look')
@@ -25,7 +25,6 @@ var CommandModule = function(options) {
     // overwrite this to run whatever this command is supposed to do
     self.execute = function() {
         throw "execute function for this object was not overwritten!";
-        return;
     };
 
     return self;

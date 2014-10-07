@@ -5,7 +5,7 @@ var Module         = require('../module'),
     PlaceModule    = require('./place'),
     _              = require('underscore');
 
-var CharacterModule = function(args) {
+var CharacterModule = function() {
     var self = new Module();
 
     function findMe__meta() {

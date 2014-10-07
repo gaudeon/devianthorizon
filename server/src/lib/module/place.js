@@ -5,7 +5,7 @@ var Module     = require('../module'),
     Plot       = require('./plot'),
     _          = require('underscore');
 
-var PlaceModule = function(args) {
+var PlaceModule = function() {
     var self = new Module();
 
     function findMe__meta() {
@@ -102,8 +102,8 @@ var PlaceModule = function(args) {
     self.summary = function() {
         var output = '';
         
-        output = output + self.plot.name + "{{ br() }}{{ br () }}";
-        output = output + self.plot.shortDescription + "{{ br() }}{{ br () }}";
+        output = output + self.plot.getName() + "{{ br() }}{{ br () }}";
+        output = output + self.plot.getDescription() + "{{ br() }}{{ br () }}";
         
         return output;
     };

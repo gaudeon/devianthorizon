@@ -4,6 +4,7 @@
 //      success => boolean determining success of resopnse
 //      message => the string response
 //      data    => any additional data
+
 var Response = function(success, message, data) {
     var self = {};
 

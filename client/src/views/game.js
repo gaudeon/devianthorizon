@@ -28,6 +28,8 @@ var GameView = Backbone.Marionette.ItemView.extend({
 
             self.addToConsole("Welcome " + self.character.fullName + "!{{ br() }}{{ br() }}" + resp.data.result.output);
         });
+        
+        self.$command.focus();
     },
 
     addToConsole: function(output) {
@@ -103,9 +105,9 @@ var GameView = Backbone.Marionette.ItemView.extend({
 
     commandFilters: function() {
         return  [
-            new RegExp('^\s*'), '',               // whitespace
-            new RegExp('\{\{','g'), '',           // _ template interpolation
-            new RegExp('\}\}','g'), '',           // _ template interpolation
+            new RegExp('^\\s*'), '',               // whitespace
+            new RegExp('\\{\\{','g'), '',           // _ template interpolation
+            new RegExp('\\}\\}','g'), '',           // _ template interpolation
             new RegExp('<(?:.|\\n)*?>','gm'), '', // html
             new RegExp('&(?:.|\\n)*?;','gm'), '', // html entities
             new RegExp('<','g'), '&lt;',          // encode <

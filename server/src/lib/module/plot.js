@@ -2,7 +2,7 @@
 
 var Module = require('../module');
 
-var PlotModule = function(options) {
+var PlotModule = function() {
     var self = new Module();
 
     var type_map; // private variable used by self.typeMap
@@ -12,12 +12,20 @@ var PlotModule = function(options) {
     function initialize() {
         self.type = 'undefined'; // Each plot must overwrite this to be their type, their type needs to be the same name as their file name
         
-        self.name = 'undefined'; // Each plot must overwrite this to be their descriptive name
+        self.name = 'undefined'; // Each plot must overwrite this to be their descriptive name (usually in their data file)
         
-        self.shortDescription = ''; // Each plot may or may not overwrite this
-
-        self.mergeOptions(options); // merge options
+        self.description = []; // Each plot may or may not overwrite this (usually in their data file)
     }
+    
+    self.getName = function() { return self.name; };
+    
+    self.getDescription = function() {
+        if(! self.selected_description) {
+            self.selected_description = self.description[ Math.floor( Math.random() * (self.description.length - 1) ) ];
+        }
+        
+        return self.selected_description;
+    };
 
     // create a plot that can then be added as a place
     self.generate = function() {

@@ -98,7 +98,7 @@ var Session = function(app) {
         }
         
         return self.model.sessionData.character;
-    }
+    };
 
     return self;
 };

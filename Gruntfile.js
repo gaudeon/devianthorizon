@@ -110,6 +110,15 @@ module.exports = function(grunt) {
             }
         },
 
+        jshint: {
+            options: {
+                strict: false
+            },
+            all: ['Gruntfile.js', 'server.js', 'client/src/**/*.js', 'server/src/**/*.js', 'server/db/**/*.js', 't/**/*.js'],
+            dev: ['client/src/**/*.js', 'server/src/**/*.js', 'server/db/**/*.js'],
+            test: ['t/**/*.js']
+        },
+
         simplemocha: {
             options: {
                 globals: ['expect','sinon'],
@@ -139,6 +148,7 @@ module.exports = function(grunt) {
             dev: {
                 script: 'bin/www',
                 options: {
+                    nodeArgs: ['--debug'],
                     watch: ['server.js', 'server/src', 'server/db', 'server/routes']
                 }
             }
@@ -156,8 +166,8 @@ module.exports = function(grunt) {
 
     grunt.registerTask('init', ['clean', 'bower', 'browserify:vendor']);
 
-    grunt.registerTask('dev', ['clean:dev', 'browserify:main', 'sass', 'concat', 'copy:dev']);
-    grunt.registerTask('prod', ['clean:prod', 'browserify:main', 'sass', 'concat', 'copy:prod', 'cssmin', 'uglify']);
+    grunt.registerTask('dev', ['clean:dev', 'browserify:main', 'jshint:dev', 'sass', 'concat', 'copy:dev']);
+    grunt.registerTask('prod', ['clean:prod', 'browserify:main', 'jshint:all', 'sass', 'concat', 'copy:prod', 'cssmin', 'uglify']);
 
     grunt.registerTask('dev:clean', 'clean:dev');
     grunt.registerTask('prod:clean', 'clean:prod');

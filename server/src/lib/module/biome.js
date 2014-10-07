@@ -4,17 +4,15 @@ var Module = require('../module'),
     _      = require('underscore'),
     Plot   = require('./plot');
 
-var BiomeModule = function(options) {
+var BiomeModule = function() {
     var self = new Module();
 
     var type_map; // private variable used by self.typeMap
 
     initialize();
 
-    function initialize(options) {
+    function initialize() {
         self.type   = 'undefined'; // Each biome must overwrite this to be their type, their type needs to be the same name as their file name
-
-        self.mergeOptions(options); // merge options
 
         // The rules and flags neccessary to build a biome, use the schema functions to build this out
         self.build = {
@@ -59,7 +57,7 @@ var BiomeModule = function(options) {
             var p = build.plots[ Math.floor(Math.random() * schema_plot_count) ];
 
             // Don't spawn unless we haven't reached the maximum
-            if(p.spawn_maximum == 0 || p.spawned < p.spawn_maximum) {
+            if(p.spawn_maximum === 0 || p.spawned < p.spawn_maximum) {
                 var opt = _.pick(p,placeOptions());
                 region.plots.push( new self.plot_map[p.type](opt) );
                 p.spawned++;

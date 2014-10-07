@@ -1,9 +1,14 @@
 // Look command
 
-var Command = require('../command');
+var Command = require('../command'),
+    PlaceModule = require('../place');
 
-var LookCommand = function(options) {
+var LookCommand = function(app, world) {
     var self = new Command();
+    
+    self.app = app;
+    
+    self.world = world;
 
     self.id = 'look';
 
@@ -20,15 +25,18 @@ var LookCommand = function(options) {
         'footer'   : ''
     };
 
-    self.execute = function() {
-        // TODO make this work
-
-        return {
-            output: 'You look at something...'
-        };
+    self.execute = function(cmdLine, character, callback) {
+        new PlaceModule().findMe({ id: character.place }, function(place) {
+            var output = place.summary();
+            
+            if('function' === typeof callback) callback({
+                place     : place,
+                output    : output
+            });
+        });
     };
 
     return self;
 };
 
-module.exports = new LookCommand();
+module.exports = LookCommand;
