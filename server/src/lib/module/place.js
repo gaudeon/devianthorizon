@@ -8,6 +8,7 @@ var Module     = require('../module'),
 var PlaceModule = function() {
     var self = new Module();
 
+    // Find
     function findMe__meta() {
         return {
             'id' : {
@@ -33,6 +34,7 @@ var PlaceModule = function() {
         });
     };
 
+    // Create
     function createMe__meta() {
         return {
             'type' : {
@@ -72,6 +74,12 @@ var PlaceModule = function() {
         });
     };
     
+    // Basic accessors
+    self.id = function() {
+        return self.model._id;
+    };
+    
+    // Other methods
     self.addCharacter = function(character, callback) {
         // Add a character to this place
         var id = (character.model) ? character.model.id : character.id;
@@ -97,6 +105,8 @@ var PlaceModule = function() {
             if('function' === typeof callback) callback();
         });
     };
+    
+    
     
     // Summary of what is in this place
     self.summary = function() {

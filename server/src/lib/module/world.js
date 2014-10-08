@@ -28,26 +28,6 @@ var WorldModule = function() {
         });
     };
 
-    // Generate - Create biome(s) based on predefined rules
-    self.generate = function() {
-    };
-    
-    // Called whenever a new place is entered
-    self.enterPlace = function(character, place, callback) {
-        var id = (place.model) ? (place.model._id || place.model.id) : (place._id || place.id);
-        if(! id) throw "No place id found!";
-        
-        new PlaceModule().findMe({ id: id }, function(place) {
-            var output = place.summary();
-            
-            if('function' === typeof callback) callback({
-                character : character,
-                place     : place,
-                output    : output
-            });
-        });
-    };
-    
     function initWorld(callback) {
         // Using the village biome as that is all we have right now
         var villageBiome = new VillageBiome();

@@ -8,6 +8,7 @@ var Module         = require('../module'),
 var CharacterModule = function() {
     var self = new Module();
 
+    // Find
     function findMe__meta() {
         return {
             'id' : {
@@ -31,6 +32,7 @@ var CharacterModule = function() {
         });
     };
 
+    // Create
     function createMe__meta() {
         return {
             'ownedBy'  : {
@@ -63,9 +65,19 @@ var CharacterModule = function() {
         });
     };
     
+    // Basic accessor methods
+    self.id = function() {
+        return self.model._id;
+    };
+    
+    self.place = function() {
+        return self.model.place;
+    };
+    
+    // Other methods
     self.setPlace = function(place, callback) {
         // Set the place for this character
-        var id = (place.model) ? place.model.id : place.id;
+        var id = (place.model) ? (place.model.id  || place.model._id): (place.id || place._id);
         if(! id) throw "No place id found!";
         
         self.model.place = id;

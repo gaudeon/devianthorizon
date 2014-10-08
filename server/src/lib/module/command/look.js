@@ -3,10 +3,8 @@
 var Command = require('../command'),
     PlaceModule = require('../place');
 
-var LookCommand = function(app, world) {
+var LookCommand = function(world) {
     var self = new Command();
-    
-    self.app = app;
     
     self.world = world;
 
@@ -25,12 +23,12 @@ var LookCommand = function(app, world) {
         'footer'   : ''
     };
 
-    self.execute = function(cmdLine, character, callback) {
-        new PlaceModule().findMe({ id: character.place }, function(place) {
+    self.runCMD = function(args, callback) {
+        new PlaceModule().findMe({ id: args.character.place() }, function(place) {
             var output = place.summary();
             
-            if('function' === typeof callback) callback({
-                place     : place,
+            callback({
+                place     : place.model.toObject(),
                 output    : output
             });
         });

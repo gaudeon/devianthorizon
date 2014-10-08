@@ -37,62 +37,79 @@ var World = function(app) {
         var resp;
         
         new CharacterModule(self.app).findMe({ id: data.character }, function(character) {
-            self.the_world.findSpawnPoint(function(place) {
-                character.logout(); // Logout first, just in case
-
-                character.setPlace(place, function() {
-                    
-                    // Set the character in the session and world for later access
-                    self.app.client.session.sessionCharacter( character.model.toObject() );
-                    
-                    resp = new Response(true, 'Character logged in.', {
-                        args: data,
-                        result: {
-                            character : character.model.toObject(),
-                            place     : place.model.toObject()
+            character.logout(); // Logout first, just in case
+            
+            // Store this character in the current session
+            self.app.client.session.sessionCharacter( character.model.toObject() );
+            
+            var place_id = character.place();
+            
+            if(! place_id) {
+                self.the_world.findSpawnPoint(function(place) {
+                    self.kernel.execute({
+                        cmdLine: 'teleport ' + place.id(),
+                        session: self.app.client.session,
+                        callback: function(d) {
+                            var resp = new Response(true, 'Character logged in.', {
+                                args: data,
+                                result: d
+                            });
+                            
+                            if('function' === typeof callback) callback(resp);
                         }
                     });
-
-                    if('function' === typeof callback) callback(resp);
+    
+                    
                 });
-            });
+            }
+            else {
+                self.kernel.execute({
+                    cmdLine: 'teleport ' + place_id,
+                    session: self.app.client.session,
+                    callback: function(d) {
+                        var resp = new Response(true, 'Character logged in.', {
+                            args: data,
+                            result: d
+                        });
+                        
+                        if('function' === typeof callback) callback(resp);
+                    }
+                });
+            }
         });
 
     };
 
-    // game interface is active, show welcome message and current place
+    // game interface is active, show welcome message and current place by 'looking'
     self.enterWorld = function(data, callback) {
-        new CharacterModule(self.app).findMe({ id: self.app.client.session.sessionCharacter()._id }, function(character) {
-            self.the_world.enterPlace(character, { id: character.model.place }, function(resp) {
-                // Update character
-                self.app.client.session.sessionCharacter( resp.character.model.toObject() );
-                
-                // Send response
-                resp = new Response(true, 'Character entered world.', {
+        self.kernel.execute({
+            cmdLine: 'look',
+            session: self.app.client.session,
+            callback: function(d) {
+                var resp = new Response(true, 'Character entered world.', {
                     args: data,
-                    result: {
-                        character : resp.character.model.toObject(),
-                        place     : resp.place.model.toObject(),
-                        output    : resp.output
-                    }
+                    result: d
                 });
-
+                
                 if('function' === typeof callback) callback(resp);
-            });
+            }
         });
-
     };
 
     // client sent command
     self.execCommand = function(data, callback) {
         try {
-            self.kernel.parse(data.command || '', self.app.client.session.sessionCharacter(), function(result) {
-                resp = new Response(true, 'Character entered world.', {
-                    args: data,
-                    result: result
-                });
-                
-                if('function' === typeof callback) callback(resp);
+            self.kernel.execute({
+                cmdLine  : data.command || '',
+                session  : self.app.client.session,
+                callback : function(result) {
+                    resp = new Response(true, 'Character entered world.', {
+                        args: data,
+                        result: result
+                    });
+                    
+                    if('function' === typeof callback) callback(resp);
+                }
             });
             
         }

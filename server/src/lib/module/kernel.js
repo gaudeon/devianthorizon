@@ -1,9 +1,13 @@
 // Command parsing and execution
 
-var Module  = require('../module'),
-    _       = require('underscore'),
-    LookCmd = require('./command/look');
-
+var Module          = require('../module'),
+    _               = require('underscore'),
+    CharacterModule = require('./character');
+    
+// Commands
+var LookCmd     = require('./command/look'),
+    TeleportCmd = require('./command/teleport');
+    
 var KernelModule = function(world) {
     var self = new Module();
     
@@ -27,41 +31,80 @@ var KernelModule = function(world) {
             }
         }
     };
+    
+    function execute__meta() {
+        return {
+            'cmdLine' : {
+                'required' : true,
+                'type'     : 'string'
+            },
+            'session'  : {
+                'required' : true,
+                'type'     : 'object'
+            },
+            'callback' : {
+                'required' : true,
+                'type'     : 'function'
+            }
+        };
+    }
 
     // find and run a command based on the command line provided
-    self.parse = function(cmdLine, character, callback) {
-        var word     = (cmdLine.split(/\s+/))[0];
-        var commands = [];
+    self.execute = function(args) {
+        var check = self.validate(execute__meta(), args);
+        if(! check.is_valid) throw check.errors();
         
-        // Find commands that meet the criteria
-        for(var c = 0; c < word.length; c++) {
-            if(self.index[ word ])
-                commands = _.union(commands, self.index[ word ]);
-
-            word = word.substr(0, word.length - 2);
-        }
-
-        // Find the first one that matches
-        var cmdFound;
-        for(var i = 0; i < commands.length; i++) {
-            var cmd = commands[i];
-
-            if(cmd.regex.test(cmdLine)) {
-                cmdFound = cmd;
-                break;
+        // always load the character first so we can pass the character model to every command
+        new CharacterModule(self.app).findMe({ id: args.session.sessionCharacter()._id }, function(character) {
+            var words    = (args.cmdLine.split(/\s+/)),
+                word     = words[0],
+                commands = [];
+            
+            // Find command by first word (abbreviations allowed)
+            for(var c = 0; c < word.length; c++) {
+                if(self.index[ word ]) {
+                    commands = _.union(commands, self.index[ word ]);
+                    break;
+                }
+    
+                word = word.substr(0, word.length - 2);
             }
-        }
-
-        if('undefined' === typeof cmdFound)
-            throw 'Command not found';
-        
-        // Execute it
-        cmdFound.execute(cmdLine, character, callback);
+    
+            // Find the first one that matches
+            var cmdFound;
+            for(var i = 0; i < commands.length; i++) {
+                var cmd = commands[i];
+    
+                if(cmd.regex.test(args.cmdLine)) {
+                    cmdFound = cmd;
+                    break;
+                }
+            }
+    
+            if('undefined' === typeof cmdFound)
+                throw 'Command not found';
+            
+            // Execute it
+            cmdFound.execute({
+                cmdLine   : args.cmdLine,
+                words     : words,
+                character : character,
+                callback  : function(resp) {
+                    if(! _.has(resp, 'character')) _.extend(resp, { character: character.model.toObject() }); // Make sure character is in the response always
+                    
+                    // Update character in session
+                    args.session.sessionCharacter( resp.character );
+                    
+                    args.callback(resp);
+                }
+            });
+        });
     };
 
     // list of command objects
     self.commands = [
-        new LookCmd(world)
+        new LookCmd(world),
+        new TeleportCmd(world)
     ];
     
     self.initialize();
