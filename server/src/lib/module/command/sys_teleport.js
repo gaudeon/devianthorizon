@@ -3,25 +3,25 @@
 var Command = require('../command'),
     PlaceModule = require('../place');
 
-var TeleportCommand = function(world) {
+var SysTeleportCommand = function(world) {
     var self = new Command();
     
     self.world = world;
 
-    self.id = 'teleport';
+    self.id = 'sys_teleport';
 
-    self.regex = RegExp('^teleport');
+    self.regex = RegExp('^sys_teleport');
 
     self.indexes = [
-        'teleport'
+        'sys_teleport'
     ];
     
     self.permissionGroups = [ 'internal' ];
 
     self.help = {
-        'title'    : 'Teleport',
-        'header'   : 'teleport',
-        'body'     : 'Teleport to a place',
+        'title'    : 'System Teleport',
+        'header'   : 'sys_teleport',
+        'body'     : 'System call to teleport character to a place',
         'footer'   : 'INTERNAL ONLY' 
     };
 
@@ -48,4 +48,4 @@ var TeleportCommand = function(world) {
     return self;
 };
 
-module.exports = TeleportCommand;
+module.exports = SysTeleportCommand;

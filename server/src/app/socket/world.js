@@ -47,7 +47,7 @@ var World = function(app) {
             if(! place_id) {
                 self.the_world.findSpawnPoint(function(place) {
                     self.kernel.execute({
-                        cmdLine  : 'teleport ' + place.id(),
+                        cmdLine  : 'sys_teleport ' + place.id(),
                         session  : self.app.client.session,
                         callback : function(d) {
                             var resp = new Response(true, 'Character logged in.', {
@@ -65,7 +65,7 @@ var World = function(app) {
             }
             else {
                 self.kernel.execute({
-                    cmdLine  : 'teleport ' + place_id,
+                    cmdLine  : 'sys_teleport ' + place_id,
                     session  : self.app.client.session,
                     callback : function(d) {
                         var resp = new Response(true, 'Character logged in.', {

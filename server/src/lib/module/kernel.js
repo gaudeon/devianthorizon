@@ -5,8 +5,8 @@ var Module          = require('../module'),
     CharacterModule = require('./character');
     
 // Commands
-var LookCmd     = require('./command/look'),
-    TeleportCmd = require('./command/teleport');
+var LookCmd        = require('./command/look'),
+    SysTeleportCmd = require('./command/sys_teleport');
     
 var KernelModule = function(world) {
     var self = new Module();
@@ -114,7 +114,7 @@ var KernelModule = function(world) {
     // list of command objects
     self.commands = [
         new LookCmd(world),
-        new TeleportCmd(world)
+        new SysTeleportCmd(world)
     ];
     
     self.initialize();
