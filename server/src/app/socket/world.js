@@ -47,16 +47,17 @@ var World = function(app) {
             if(! place_id) {
                 self.the_world.findSpawnPoint(function(place) {
                     self.kernel.execute({
-                        cmdLine: 'teleport ' + place.id(),
-                        session: self.app.client.session,
-                        callback: function(d) {
+                        cmdLine  : 'teleport ' + place.id(),
+                        session  : self.app.client.session,
+                        callback : function(d) {
                             var resp = new Response(true, 'Character logged in.', {
                                 args: data,
                                 result: d
                             });
                             
                             if('function' === typeof callback) callback(resp);
-                        }
+                        },
+                        internal : true
                     });
     
                     
@@ -64,16 +65,17 @@ var World = function(app) {
             }
             else {
                 self.kernel.execute({
-                    cmdLine: 'teleport ' + place_id,
-                    session: self.app.client.session,
-                    callback: function(d) {
+                    cmdLine  : 'teleport ' + place_id,
+                    session  : self.app.client.session,
+                    callback : function(d) {
                         var resp = new Response(true, 'Character logged in.', {
                             args: data,
                             result: d
                         });
                         
                         if('function' === typeof callback) callback(resp);
-                    }
+                    },
+                    internal : true
                 });
             }
         });
@@ -83,16 +85,17 @@ var World = function(app) {
     // game interface is active, show welcome message and current place by 'looking'
     self.enterWorld = function(data, callback) {
         self.kernel.execute({
-            cmdLine: 'look',
-            session: self.app.client.session,
-            callback: function(d) {
+            cmdLine  : 'look',
+            session  : self.app.client.session,
+            callback : function(d) {
                 var resp = new Response(true, 'Character entered world.', {
                     args: data,
                     result: d
                 });
                 
                 if('function' === typeof callback) callback(resp);
-            }
+            },
+            internal : true
         });
     };
 
@@ -103,7 +106,7 @@ var World = function(app) {
                 cmdLine  : data.command || '',
                 session  : self.app.client.session,
                 callback : function(result) {
-                    resp = new Response(true, 'Character entered world.', {
+                    resp = new Response(true, 'Character executed command.', {
                         args: data,
                         result: result
                     });

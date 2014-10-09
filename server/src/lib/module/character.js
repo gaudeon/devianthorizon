@@ -21,14 +21,22 @@ var CharacterModule = function() {
         var check = self.validate(findMe__meta(), args);
         if(! check.is_valid) throw check.errors();
         
+        callback = ('function' === typeof callback) ? callback : function() {};
+        
         CharacterModel.findById(args.id, function(err, doc) {
-            if(err) throw err;
+            if(err) {
+                callback(null);
+                return;
+            }
             
-            if(! doc) throw "Character not found!";
+            if(! doc) {
+                callback(null);
+                return;
+            }
             
             self.model = doc;
             
-            if('function' === typeof callback) callback(self);
+            callback(self);
         });
     };
 
@@ -51,17 +59,22 @@ var CharacterModule = function() {
 
         var check = self.validate(createMe__meta(), args);
         if(! check.is_valid) throw check.errors();
+        
+        callback = ('function' === typeof callback) ? callback : function() {};
 
         // Create new region model
         CharacterModel.create(_.pick(args, [
             'ownedBy',
             'fullName'
         ]), function(err, doc) {
-            if(err) throw err;
+            if(err) {
+                callback(null);
+                return;
+            }
             
             self.model = doc;
 
-            if('function' === typeof callback) callback(self);
+            callback(self);
         });
     };
     
@@ -74,11 +87,17 @@ var CharacterModule = function() {
         return self.model.place;
     };
     
+    self.permissionGroup = function() {
+        return self.model.permissionGroup;
+    };
+    
     // Other methods
     self.setPlace = function(place, callback) {
         // Set the place for this character
         var id = (place.model) ? (place.model.id  || place.model._id): (place.id || place._id);
         if(! id) throw "No place id found!";
+        
+        callback = ('function' === typeof callback) ? callback : function() {};
         
         self.model.place = id;
         self.model.save(function(err) {
@@ -86,22 +105,24 @@ var CharacterModule = function() {
             
             new PlaceModule().findMe({ id: id }, function(obj) {
                 obj.addCharacter(self, function() {
-                    if('function' === typeof callback) callback();
+                    callback();
                 });
             });
         });
     };
     
     self.logout = function(callback) {
+        callback = ('function' === typeof callback) ? callback : function() {};
+        
         if(self.model.place) {
             new PlaceModule().findMe({ id: self.model.place }, function(obj) {
                 obj.removeCharacter(self);
                 
-                if('function' === typeof callback) callback();
+                callback();
             });
         }
         else {
-            if('function' === typeof callback) callback();
+            callback();
         }
     };
     

@@ -15,6 +15,8 @@ var LookCommand = function(world) {
     self.indexes = [
         'look'
     ];
+    
+    self.permissionGroups = [ 'character' ];
 
     self.help = {
         'title'    : 'Look',

@@ -13,7 +13,10 @@ var CommandModule = function() {
 
     // overwrite this and return a list of words that the kernel can index on as a match for this command
     self.indexes = [ ];
-
+    
+    // overwrite this to set specific permission groups allowed to execute this command
+    self.permissionGroups = [ 'character', 'admin', 'internal' ];
+    
     // overwrite this to return help information used by the help system
     self.help = {
         'title'    : '',

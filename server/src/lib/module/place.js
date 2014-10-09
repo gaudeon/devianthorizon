@@ -21,16 +21,25 @@ var PlaceModule = function() {
         var check = self.validate(findMe__meta(), args);
         if(! check.is_valid) throw check.errors();
         
+        callback = ('function' === typeof callback) ? callback : function() {};
+        
         PlaceModel.findById(args.id, function(err, doc) {
-            if(err) throw err;
             
-            if(! doc) throw "Place not found!";
+            if(err) {
+                callback(null);
+                return;
+            }
+            
+            if(! doc) {
+                callback(null);
+                return;
+            }
             
             self.model = doc;
             
             self.plot = new (new Plot().typeMap(doc.type))();
             
-            if('function' === typeof callback) callback(self);
+            callback(self);
         });
     };
 
@@ -58,19 +67,24 @@ var PlaceModule = function() {
         var check = self.validate(createMe__meta(), args);
         if(! check.is_valid) throw check.errors();
 
+        callback = ('function' === typeof callback) ? callback : function() {};
+        
         // Create new region model
         PlaceModel.create(_.pick(args, [
             'type',
             'is_spawn_point',
             'is_area_gate'
         ]), function(err, doc) {
-            if(err) throw err;
+            if(err) {
+                callback(null);
+                return;
+            }
             
             self.model = doc;
 
             self.plot = new (new Plot().typeMap(doc.type))();
 
-            if('function' === typeof callback) callback(self);
+            callback(self);
         });
     };
     
@@ -85,11 +99,13 @@ var PlaceModule = function() {
         var id = (character.model) ? character.model.id : character.id;
         if(! id) throw "No place id found!";
         
+        callback = ('function' === typeof callback) ? callback : function() {};
+        
         self.model.characters.push(id);
         self.model.save(function(err) {
             if(err) throw err;
             
-            if('function' === typeof callback) callback();
+            callback();
         });
     };
     
@@ -98,11 +114,13 @@ var PlaceModule = function() {
         var id = (character.model) ? character.model.id : character.id;
         if(! id) throw "No place id found!";
         
+        callback = ('function' === typeof callback) ? callback : function() {};
+        
         self.model.characters.pull(id);
         self.model.save(function(err) {
             if(err) throw err;
             
-            if('function' === typeof callback) callback();
+            callback();
         });
     };
     
@@ -113,7 +131,7 @@ var PlaceModule = function() {
         var output = '';
         
         output = output + self.plot.getName() + "{{ br() }}{{ br () }}";
-        output = output + self.plot.getDescription() + "{{ br() }}{{ br () }}";
+        output = output + self.plot.getDescription();
         
         return output;
     };

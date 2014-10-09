@@ -26,7 +26,7 @@ var GameView = Backbone.Marionette.ItemView.extend({
             self.character = resp.data.result.character;
             self.place     = resp.data.result.place;
 
-            self.addToConsole("Welcome " + self.character.fullName + "!{{ br() }}{{ br() }}" + resp.data.result.output);
+            self.addToConsole("Welcome " + self.character.fullName + "!{{ br() }}{{ br() }}" + resp.data.result.output + "{{ br() }}{{ br() }}");
         });
         
         self.$command.focus();
@@ -36,6 +36,8 @@ var GameView = Backbone.Marionette.ItemView.extend({
         var self = this;
 
         self.$console.html( self.$console.html() + self.parse(output) );
+        
+        self.$console.scrollTop(self.$console[0].scrollHeight); // keep the scroll posittion at the bottom
     },
 
     parse: function(html) {

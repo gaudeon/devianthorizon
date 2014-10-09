@@ -45,6 +45,10 @@ var KernelModule = function(world) {
             'callback' : {
                 'required' : true,
                 'type'     : 'function'
+            },
+            'internal' : {
+                'desc' : 'Set this to set the permission group to internal for internal commands',
+                'type' : 'boolean'
             }
         };
     }
@@ -53,6 +57,8 @@ var KernelModule = function(world) {
     self.execute = function(args) {
         var check = self.validate(execute__meta(), args);
         if(! check.is_valid) throw check.errors();
+        
+        var internal = args.internal || false;
         
         // always load the character first so we can pass the character model to every command
         new CharacterModule(self.app).findMe({ id: args.session.sessionCharacter()._id }, function(character) {
@@ -69,20 +75,24 @@ var KernelModule = function(world) {
     
                 word = word.substr(0, word.length - 2);
             }
+            
+            //
     
             // Find the first one that matches
             var cmdFound;
             for(var i = 0; i < commands.length; i++) {
                 var cmd = commands[i];
-    
-                if(cmd.regex.test(args.cmdLine)) {
+
+                if((internal || _.contains(cmd.permissionGroups, character.permissionGroup())) && cmd.regex.test(args.cmdLine)) {
                     cmdFound = cmd;
                     break;
                 }
             }
     
-            if('undefined' === typeof cmdFound)
-                throw 'Command not found';
+            if('undefined' === typeof cmdFound) {
+                args.callback({ output: 'Command not found' });
+                return;
+            }
             
             // Execute it
             cmdFound.execute({

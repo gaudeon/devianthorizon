@@ -15,32 +15,34 @@ var TeleportCommand = function(world) {
     self.indexes = [
         'teleport'
     ];
+    
+    self.permissionGroups = [ 'internal' ];
 
     self.help = {
         'title'    : 'Teleport',
         'header'   : 'teleport',
         'body'     : 'Teleport to a place',
-        'footer'   : 'ADMIN ONLY' // TODO: implement character roles (such as admin). Then implement admin privileges and make sure the server app calls to commands has them by default.
+        'footer'   : 'INTERNAL ONLY' 
     };
 
     self.runCMD = function(args, callback) {
         var place_id = args.words[1];
         
-        try {
-            new PlaceModule().findMe({ id: place_id }, function(place) {
-                args.character.setPlace(place, function() {
-                    callback({
-                        place     : place.model.toObject(),
-                        character : args.character.model.toObject()
-                    });
+        new PlaceModule().findMe({ id: place_id }, function(place) {
+            if(! place) {
+                callback({
+                    output: "Teleport destination does not exist."
+                });
+                return;
+            }
+            
+            args.character.setPlace(place, function() {
+                callback({
+                    place     : place.model.toObject(),
+                    character : args.character.model.toObject()
                 });
             });
-        }
-        catch(error) {
-            callback({
-                output: "Could not place to teleport to."
-            });
-        }
+        });
     };
 
     return self;
