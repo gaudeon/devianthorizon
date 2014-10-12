@@ -4,8 +4,8 @@ var Plot = require('../plot'),
     Data = require('../../data/plot/dirt_road'),
     _    = require('underscore');
 
-var DirtRoadPlot = function() {
-    var self = new Plot();
+var DirtRoadPlot = function(options) {
+    var self = new Plot(options);
 
     initialize();
 

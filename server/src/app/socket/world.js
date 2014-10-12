@@ -37,6 +37,8 @@ var World = function(app) {
         var resp;
         
         new CharacterModule(self.app).findMe({ id: data.character }, function(character) {
+            if(! character) throw "Character not found!";
+            
             character.logout(); // Logout first, just in case
             
             // Store this character in the current session

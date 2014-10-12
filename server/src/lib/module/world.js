@@ -5,6 +5,7 @@ var Module       = require('../module'),
     Models       = require('../../../db/models'),
     RegionModule = require('./region'),
     PlaceModule  = require('./place'),
+    GateModule   = require('./gate'),
     _            = require('underscore');
 
 var WorldModule = function() {
@@ -16,12 +17,12 @@ var WorldModule = function() {
             if(!doc) {
                 initWorld(function(region) {
                     region.findSpawnPoints(function(list) {
-                        callback(list.shift);
+                        callback(list.shift());
                     });
                 });
             }
             else {
-                new PlaceModule().findMe({ id: doc.id }, function(place) {
+                new PlaceModule().findMe({ id: doc._id }, function(place) {
                     callback(place);
                 });
             }
@@ -29,32 +30,60 @@ var WorldModule = function() {
     };
 
     function initWorld(callback) {
+        callback = ('function' === typeof callback) ? callback : function() {};
+        
         // Using the village biome as that is all we have right now
         var villageBiome = new VillageBiome();
 
-        var regionData= villageBiome.generate();
-
-        // Create a new region
+        var regionData = villageBiome.generate();
+        
         new RegionModule().createMe(_.pick(regionData, [
             'type'
         ]), function(region) {
             
-            // recursion to wait until all places are created before calling the callback
-            function createPlaces(callback) {
+            // place temp id to real obj mapping (for gates)
+            var place_tempIdTOrealObj = {};
+            
+            // recursion to wait until all places are created before processing gates
+            function createPlaces(cb) {
                 var p = regionData.plots.shift();
+                
                 if(! p) {
-                    if('function' === typeof callback) callback();
+                    cb();
                     return;
                 }
                 
                 new PlaceModule().createMe(p, function(placeObj) {
+                    place_tempIdTOrealObj[p.tempId] = placeObj; // setup temp id to real obj mapping
                     region.addPlace(placeObj);
-                    createPlaces(callback);
+                    createPlaces(cb);
+                });
+            }
+            
+            // recursion to wait until all gates are created before calling the return callback
+            function createGates(cb) {
+                var g = regionData.gates.shift();
+                
+                if(! g) {
+                    cb();
+                    return;
+                }
+                
+                // Convert temp ids into real ids
+                var gate_def         = _.clone(g);
+                gate_def.source      = (place_tempIdTOrealObj[g.source]).id();
+                gate_def.destination = (place_tempIdTOrealObj[g.destination]).id();
+                
+                new GateModule().createMe(gate_def, function(gateObj) {
+                    (place_tempIdTOrealObj[g.source]).addGate(gateObj);
+                    createGates(cb);
                 });
             }
             
             createPlaces(function() {
-                callback(region);
+                createGates(function() {
+                    callback(region);
+                });
             });
         });
     }

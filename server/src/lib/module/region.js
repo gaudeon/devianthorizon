@@ -2,7 +2,10 @@
 
 var Module       = require('../module'),
     _            = require('underscore'),
+    mongoose     = require('mongoose'),
+    ObjectId     = mongoose.Types.ObjectId,
     RegionModel  = require('../../../db/models/region'),
+    PlaceModel   = require('../../../db/models/place'),
     PlaceModule  = require('./place'),
     Biome        = require('./biome');
 
@@ -64,7 +67,7 @@ var RegionModule = function(args) {
 
     self.addPlace = function(place) {
         // Add a place to this region
-        var id = (place.model) ? place.model.id : place.id;
+        var id = (place.model) ? (place.model.id || place.model._id) : (place.id || place._id);
         if(! id) throw "No place id found!";
 
         self.model.places.push(place.model.id);
@@ -74,25 +77,21 @@ var RegionModule = function(args) {
     };
     
     self.findSpawnPoints = function(callback) {
-        PlaceModel.find({ id: self.model.places }, 'id', function(err, docs) {
+        callback = ('function' === typeof callback) ? callback : function() {};
+        
+        var $in = [];
+        for(var i = 0; i < self.model.places.length; i++) {
+            $in.push( ObjectId(self.model.places[i] ) );
+        }
+        
+        PlaceModel.find({ "_id" : { "$in" : $in } }, function(err, docs) {
             var places = [];
             
-            function loadPlaces(cb) {
-                var p = docs.shift;
-                if(!p) {
-                    if('function' === typeof cb) cb(places);
-                    return;
-                }
-                
-                new PlaceModule().findMe({ id: p.id }, function(place) {
-                    places.push(place);
-                    loadPlaces(cb);
-                });
+            for(var d = 0; d < docs.length; d++) {
+                places.push( new PlaceModule().loadMe( { model : docs[d] } ) );
             }
             
-            loadPlaces(function() {
-                callback(places);
-            });
+            callback(places);
         });
     };
 

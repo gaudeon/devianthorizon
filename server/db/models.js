@@ -2,6 +2,7 @@
 
 var models = {
     character : require('./models/character'),
+    gate      : require('./models/gate'),
     place     : require('./models/place'),
     region    : require('./models/region'),
     session   : require('./models/session'),

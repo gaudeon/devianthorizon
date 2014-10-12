@@ -1,8 +1,9 @@
 // Plot logic
 
-var Module = require('../module');
+var Module = require('../module'),
+    _      = require('underscore');
 
-var PlotModule = function() {
+var PlotModule = function(options) {
     var self = new Module();
 
     var type_map; // private variable used by self.typeMap
@@ -15,6 +16,8 @@ var PlotModule = function() {
         self.name = 'undefined'; // Each plot must overwrite this to be their descriptive name (usually in their data file)
         
         self.description = []; // Each plot may or may not overwrite this (usually in their data file)
+        
+        _.extend(self, options);
     }
     
     self.getName = function() { return self.name; };
@@ -25,11 +28,6 @@ var PlotModule = function() {
         }
         
         return self.selected_description;
-    };
-
-    // create a plot that can then be added as a place
-    self.generate = function() {
-
     };
 
     // map types to plot objects

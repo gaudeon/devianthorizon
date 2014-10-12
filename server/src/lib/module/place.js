@@ -7,12 +7,36 @@ var Module     = require('../module'),
 
 var PlaceModule = function() {
     var self = new Module();
+    
+    // Load from obj
+    function loadMe__meta() {
+        return {
+            'model' : {
+                'required' : true
+            },
+        };
+    }
+    
+    self.loadMe = function(args, callback) {
+        var check = self.validate(loadMe__meta(), args);
+        if(! check.is_valid) throw check.errors();
+        
+        callback = ('function' === typeof callback) ? callback : function() {};
+        
+        self.model = args.model;
+        
+        self.plot = new (new Plot().typeMap(self.model.type))();
+        
+        callback(self);
+        
+        return self;
+    };
 
     // Find
     function findMe__meta() {
         return {
             'id' : {
-                'required' : true,
+                'required' : true
             }
         };
     }
@@ -62,8 +86,6 @@ var PlaceModule = function() {
     }
 
     self.createMe = function(args, callback) {
-        if(args.options) _.extend(args,args.options);
-
         var check = self.validate(createMe__meta(), args);
         if(! check.is_valid) throw check.errors();
 
@@ -96,7 +118,7 @@ var PlaceModule = function() {
     // Other methods
     self.addCharacter = function(character, callback) {
         // Add a character to this place
-        var id = (character.model) ? character.model.id : character.id;
+        var id = (character.model) ? (character.model.id || character.model._id) : (character.id || character._id);
         if(! id) throw "No place id found!";
         
         callback = ('function' === typeof callback) ? callback : function() {};
@@ -110,8 +132,8 @@ var PlaceModule = function() {
     };
     
     self.removeCharacter = function(character, callback) {
-        // Add a character to this place
-        var id = (character.model) ? character.model.id : character.id;
+        // Remove a character from this place
+        var id = (character.model) ? (character.model.id || character.model._id) : (character.id || character._id);
         if(! id) throw "No place id found!";
         
         callback = ('function' === typeof callback) ? callback : function() {};
@@ -124,7 +146,35 @@ var PlaceModule = function() {
         });
     };
     
+    self.addGate = function(gate, callback) {
+        // Add a gate to this place
+        var id = (gate.model) ? (gate.model.id || gate.model._id) : (gate.id || gate._id);
+        if(! id) throw "No gate id found!";
+        
+        callback = ('function' === typeof callback) ? callback : function() {};
+        
+        self.model.gates.push(id);
+        self.model.save(function(err) {
+            if(err) throw err;
+            
+            callback();
+        });
+    };
     
+    self.removeGate = function(gate, callback) {
+        // Remove a gate from this place
+        var id = (gate.model) ? (gate.model.id || gate.model._id) : (gate.id || gate._id);
+        if(! id) throw "No gate id found!";
+        
+        callback = ('function' === typeof callback) ? callback : function() {};
+        
+        self.model.gates.pull(id);
+        self.model.save(function(err) {
+            if(err) throw err;
+            
+            callback();
+        });
+    };
     
     // Summary of what is in this place
     self.summary = function() {
