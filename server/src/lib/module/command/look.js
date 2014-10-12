@@ -27,11 +27,11 @@ var LookCommand = function(world) {
 
     self.runCMD = function(args, callback) {
         new PlaceModule().findMe({ id: args.character.place() }, function(place) {
-            var output = place.summary();
-            
-            callback({
-                place     : place.model.toObject(),
-                output    : output
+            place.summary(function(output) {
+                callback({
+                    place     : place.model.toObject(),
+                    output    : output
+                });
             });
         });
     };

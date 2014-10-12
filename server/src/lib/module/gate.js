@@ -7,6 +7,28 @@ var Module      = require('../module'),
 
 var GateModule = function() {
     var self = new Module();
+    
+    // Load from obj
+    function loadMe__meta() {
+        return {
+            'model' : {
+                'required' : true
+            },
+        };
+    }
+    
+    self.loadMe = function(args, callback) {
+        var check = self.validate(loadMe__meta(), args);
+        if(! check.is_valid) throw check.errors();
+        
+        callback = ('function' === typeof callback) ? callback : function() {};
+        
+        self.model = args.model;
+        
+        callback(self);
+        
+        return self;
+    };
 
     // Find
     function findMe__meta() {

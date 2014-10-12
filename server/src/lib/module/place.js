@@ -2,7 +2,9 @@
 
 var Module     = require('../module'),
     PlaceModel = require('../../../db/models/place'),
-    Plot       = require('./plot'),
+    GateModel  = require('../../../db/models/gate'),
+    PlotModule = require('./plot'),
+    GateModule = require('./gate'),
     _          = require('underscore');
 
 var PlaceModule = function() {
@@ -25,7 +27,7 @@ var PlaceModule = function() {
         
         self.model = args.model;
         
-        self.plot = new (new Plot().typeMap(self.model.type))();
+        self.plot = new (new PlotModule().typeMap(self.model.type))();
         
         callback(self);
         
@@ -61,7 +63,7 @@ var PlaceModule = function() {
             
             self.model = doc;
             
-            self.plot = new (new Plot().typeMap(doc.type))();
+            self.plot = new (new PlotModule().typeMap(doc.type))();
             
             callback(self);
         });
@@ -104,8 +106,8 @@ var PlaceModule = function() {
             
             self.model = doc;
 
-            self.plot = new (new Plot().typeMap(doc.type))();
-
+            self.plot = new (new PlotModule().typeMap(doc.type))();
+            
             callback(self);
         });
     };
@@ -113,6 +115,35 @@ var PlaceModule = function() {
     // Basic accessors
     self.id = function() {
         return self.model._id;
+    };
+    
+    self.gates = function(callback) {
+        callback = ('function' === typeof callback) ? callback : function() {};
+        
+        if(self._gates) callback(self._gates);
+        
+        // load gates
+        self._gates = [];
+        var gates = _.clone(self.model.gates);
+        
+        // recursive callback to load all gates
+        function getGate(cb) {
+            var g = gates.shift();
+            
+            if(! g) {
+                cb();
+                return;
+            }
+            
+            new GateModule().findMe({ id: g}, function(gate) {
+                self._gates.push(gate);
+                getGate(cb);
+            });
+        }
+        
+        getGate(function() {
+            callback(self._gates);
+        });
     };
     
     // Other methods
@@ -157,6 +188,8 @@ var PlaceModule = function() {
         self.model.save(function(err) {
             if(err) throw err;
             
+            delete self._gates; // refresh gates array
+            
             callback();
         });
     };
@@ -172,18 +205,37 @@ var PlaceModule = function() {
         self.model.save(function(err) {
             if(err) throw err;
             
+            delete self._gates; // refresh gates array
+            
             callback();
         });
     };
     
     // Summary of what is in this place
-    self.summary = function() {
+    self.summary = function(callback) {
+        callback = ('function' === typeof callback) ? callback : function() {};
+        
         var output = '';
         
         output = output + self.plot.getName() + "{{ br() }}{{ br () }}";
-        output = output + self.plot.getDescription();
+        output = output + self.plot.getDescription() + "{{ br() }}{{ br() }}";
         
-        return output;
+        self.gates(function(gates) {
+            if(gates.length < 1) {
+                output = output + "Exits: none";
+            }
+            else {
+                var exits = [];
+                
+                _.each(gates, function(g) {
+                   exits.push(g.direction()); 
+                });
+                
+                output = output + "Exits: " + _.toArray(exits).join(', ');
+            }
+            
+            callback(output);
+        });
     };
 
     return self;
