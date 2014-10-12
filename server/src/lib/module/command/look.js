@@ -1,6 +1,6 @@
 // Look command
 
-var Command = require('../command'),
+var Command     = require('../command'),
     PlaceModule = require('../place');
 
 var LookCommand = function(world) {
@@ -29,8 +29,8 @@ var LookCommand = function(world) {
         new PlaceModule().findMe({ id: args.character.place() }, function(place) {
             place.summary(function(output) {
                 callback({
-                    place     : place.model.toObject(),
-                    output    : output
+                    'place'  : place.model.toObject(),
+                    'output' : output
                 });
             });
         });

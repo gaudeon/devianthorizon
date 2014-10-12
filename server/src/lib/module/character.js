@@ -111,7 +111,8 @@ var CharacterModule = function() {
         });
     };
     
-    self.logout = function(callback) {
+    self.unsetPlace = function(callback) {
+        // Remove the place this character is in
         callback = ('function' === typeof callback) ? callback : function() {};
         
         if(self.model.place) {
@@ -124,6 +125,14 @@ var CharacterModule = function() {
         else {
             callback();
         }
+    };
+    
+    self.logout = function(callback) {
+        callback = ('function' === typeof callback) ? callback : function() {};
+        
+        self.unsetPlace(function() {
+            callback
+        });
     };
     
     return self;

@@ -2,7 +2,6 @@
 
 var Module      = require('../module'),
     GateModel   = require('../../../db/models/gate'),
-    PlaceModule = require('./place'),
     _           = require('underscore');
 
 var GateModule = function() {
@@ -140,19 +139,11 @@ var GateModule = function() {
     };
     
     self.source = function(callback) {
-        callback = ('function' === typeof callback) ? callback : function() {};
-        
-        new PlaceModule().findMe({ id: self.model.source }, function(place) {
-            callback(place);
-        });
+        return self.model.source;
     };
     
     self.destination = function(callback) {
-        callback = ('function' === typeof callback) ? callback : function() {};
-        
-        new PlaceModule().findMe({ id: self.model.destination }, function(place) {
-            callback(place);
-        });
+        return self.model.destination;
     };
     
     // other methods
@@ -217,9 +208,9 @@ var GateModule = function() {
         var dirs = _.union(self.coplanarDirections(), self.verticalDirections());
         
         return {
-            direction: {
-                required : true,
-                enum     : dirs
+            'direction' : {
+                'required' : true,
+                'enum'     : dirs
             }
         };
     }
@@ -243,6 +234,48 @@ var GateModule = function() {
             'northwest' : 'southeast',
             'up'        : 'down',
             'down'      : 'up'
+        };
+    };
+    
+    function translateDirection__meta() {
+        return {
+            'direction' : {
+                'required' : true
+            }
+        };
+    }
+    
+    self.translateDirection = function(args) {
+        var check = self.validate(translateDirection__meta(), args);
+        if(! check.is_valid) throw check.errors();
+        
+        var direction = String(args.direction).toLowerCase();
+        
+        return (self.directionTranslations())[direction];
+    };
+    
+    self.directionTranslations = function() {
+        return {
+            'north'     : 'north',
+            'n'         : 'north',
+            'northeast' : 'northeast',
+            'ne'        : 'northeast',
+            'east'      : 'east',
+            'e'         : 'east',
+            'southeast' : 'southeast',
+            'se'        : 'southeast',
+            'south'     : 'south',
+            's'         : 'south',
+            'southwest' : 'southwest',
+            'sw'        : 'southwest',
+            'west'      : 'west',
+            'w'         : 'west',
+            'northwest' : 'northwest',
+            'nw'        : 'northwest',
+            'up'        : 'up',
+            'u'         : 'up',
+            'down'      : 'down',
+            'd'         : 'down'
         };
     };
     

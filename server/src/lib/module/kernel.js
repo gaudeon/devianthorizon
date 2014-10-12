@@ -6,7 +6,8 @@ var Module          = require('../module'),
     
 // Commands
 var LookCmd        = require('./command/look'),
-    SysTeleportCmd = require('./command/sys_teleport');
+    SysTeleportCmd = require('./command/sys_teleport'),
+    WalkCmd        = require('./command/walk');
     
 var KernelModule = function(world) {
     var self = new Module();
@@ -99,6 +100,8 @@ var KernelModule = function(world) {
                 cmdLine   : args.cmdLine,
                 words     : words,
                 character : character,
+                kernel    : self,
+                session   : args.session,
                 callback  : function(resp) {
                     if(! _.has(resp, 'character')) _.extend(resp, { character: character.model.toObject() }); // Make sure character is in the response always
                     
@@ -114,7 +117,8 @@ var KernelModule = function(world) {
     // list of command objects
     self.commands = [
         new LookCmd(world),
-        new SysTeleportCmd(world)
+        new SysTeleportCmd(world),
+        new WalkCmd(world)
     ];
     
     self.initialize();

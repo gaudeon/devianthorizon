@@ -40,6 +40,14 @@ var CommandModule = function() {
                 'required' : true,
                 'type'     : 'object'
             },
+            'kernel' : {
+                'required' : true,
+                'type'     : 'object'
+            },
+            'session' : {
+                'required' : true,
+                'type'     : 'object'
+            },
             'callback' : {
                 'required' : true,
                 'type'     : 'function'
