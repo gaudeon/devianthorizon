@@ -66,7 +66,7 @@ var WalkCommand = function(world) {
                     callback({
                         'place'  : source.model.toObject(),
                         'output' : output
-                    })
+                    });
                 }
             });
             

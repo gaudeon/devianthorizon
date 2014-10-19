@@ -131,7 +131,7 @@ var CharacterModule = function() {
         callback = ('function' === typeof callback) ? callback : function() {};
         
         self.unsetPlace(function() {
-            callback
+            callback();
         });
     };
     
