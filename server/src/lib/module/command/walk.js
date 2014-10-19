@@ -22,7 +22,7 @@ var WalkCommand = function(world) {
 
     self.help = {
         'title'    : 'Walk',
-        'header'   : 'Walk',
+        'header'   : 'Usage: walk [direction]',
         'body'     : 'Walk to a new place',
         'footer'   : ''
     };

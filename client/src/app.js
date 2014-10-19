@@ -58,6 +58,11 @@ App.vent.on('lobby', function(callback) {
     });
 });
 
+App.vent.on('logout', function(data) {
+    App.router.navigate('lobby');
+    App.controller.lobby();
+});
+
 App.vent.on('createCharacter', function(data) {
     App.socket.lobby.createCharacter(data, function(resp) {
         if(resp.success === true) {

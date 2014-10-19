@@ -59,6 +59,9 @@ var GameView = Backbone.Marionette.ItemView.extend({
         return {
             br: function() {
                 return '<br>';
+            },
+            tab : function() {
+                return '&nbsp;&nbsp;&nbsp;&nbsp;';
             }
         };
     },
@@ -96,6 +99,11 @@ var GameView = Backbone.Marionette.ItemView.extend({
 
                         if(resp.data.result && resp.data.result.output)
                             self.addToConsole(resp.data.result.output + '{{br()}}{{br()}}');
+                            
+                        if(resp.data.result && resp.data.result.logout){
+                            var radio = Backbone.Wreqr.radio.channel('global');
+                            radio.vent.trigger('logout');   
+                        }
                     }
                     else {
                         self.addToConsole(resp.message + '{{br()}}{{br()}}');

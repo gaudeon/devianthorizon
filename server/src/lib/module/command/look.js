@@ -20,7 +20,7 @@ var LookCommand = function(world) {
 
     self.help = {
         'title'    : 'Look',
-        'header'   : 'look',
+        'header'   : 'Usage: look',
         'body'     : 'Look around',
         'footer'   : ''
     };

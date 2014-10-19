@@ -20,7 +20,7 @@ var SysTeleportCommand = function(world) {
 
     self.help = {
         'title'    : 'System Teleport',
-        'header'   : 'sys_teleport',
+        'header'   : 'Usage: sys_teleport',
         'body'     : 'System call to teleport character to a place',
         'footer'   : 'INTERNAL ONLY' 
     };
