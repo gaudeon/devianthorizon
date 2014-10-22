@@ -95,9 +95,9 @@ var KernelModule = function(world) {
             if('undefined' === typeof cmdFound) {
                 var cmd_soundex = [];
 
-                for(var c = 0; c < commands.length; c++) {
-                    if(commands[c].is_soundex_match({ 'soundex' : word_soundex }))
-                        cmd_soundex.push(commands[c].id);
+                for(var cs = 0; cs < commands.length; cs++) {
+                    if(commands[cs].is_soundex_match({ 'soundex' : word_soundex }))
+                        cmd_soundex.push(commands[cs].id);
                 }
 
                 var output = 'Command not found.';

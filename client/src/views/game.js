@@ -61,7 +61,7 @@ var GameView = Backbone.Marionette.ItemView.extend({
                 return '<br>';
             },
             tab: function() {
-                return '&nbsp;&nbsp;&nbsp;&nbsp;'
+                return '&nbsp;&nbsp;&nbsp;&nbsp;';
             }
         };
     },
