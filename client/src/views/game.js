@@ -28,7 +28,7 @@ var GameView = Backbone.Marionette.ItemView.extend({
 
             self.addToConsole("Welcome " + self.character.fullName + "!{{ br() }}{{ br() }}" + resp.data.result.output + "{{ br() }}{{ br() }}");
         });
-        
+
         self.$command.focus();
     },
 
@@ -36,7 +36,7 @@ var GameView = Backbone.Marionette.ItemView.extend({
         var self = this;
 
         self.$console.html( self.$console.html() + self.parse(output) );
-        
+
         self.$console.scrollTop(self.$console[0].scrollHeight); // keep the scroll posittion at the bottom
     },
 
@@ -59,6 +59,9 @@ var GameView = Backbone.Marionette.ItemView.extend({
         return {
             br: function() {
                 return '<br>';
+            },
+            tab: function() {
+                return '&nbsp;&nbsp;&nbsp;&nbsp;'
             }
         };
     },
@@ -95,10 +98,10 @@ var GameView = Backbone.Marionette.ItemView.extend({
                             self.place = resp.data.result.place;
 
                         if(resp.data.result && resp.data.result.output)
-                            self.addToConsole(resp.data.result.output + '{{br()}}{{br()}}');
+                            self.addToConsole(resp.data.result.output + '{{ br() }}{{ br() }}');
                     }
                     else {
-                        self.addToConsole(resp.message + '{{br()}}{{br()}}');
+                        self.addToConsole(resp.message + '{{ br() }}{{ br() }}');
                     }
                 });
             }

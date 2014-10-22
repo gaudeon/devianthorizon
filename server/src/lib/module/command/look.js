@@ -5,17 +5,17 @@ var Command     = require('../command'),
 
 var LookCommand = function(world) {
     var self = new Command();
-    
+
     self.world = world;
 
     self.id = 'look';
 
-    self.regex = RegExp('^look');
+    self.regex = RegExp('^\\blook\\b');
 
     self.indexes = [
         'look'
     ];
-    
+
     self.permissionGroups = [ 'character' ];
 
     self.help = {
