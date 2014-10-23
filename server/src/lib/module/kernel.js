@@ -2,18 +2,19 @@
 
 var Module          = require('../module'),
     _               = require('underscore'),
-    CharacterModule = require('./character');
-    
+    CharacterModule = require('./character'),
+    utils           = require('./utils');
+
 // Commands
 var HelpCmd        = require('./command/help'),
     LogoutCmd      = require('./command/logout'),
     LookCmd        = require('./command/look'),
     SysTeleportCmd = require('./command/sys_teleport'),
     WalkCmd        = require('./command/walk');
-    
+
 var KernelModule = function(world) {
     var self = new Module();
-    
+
     self.initialize = function() {
         self.world = world;
         self.index = {};
@@ -34,7 +35,7 @@ var KernelModule = function(world) {
             }
         }
     };
-    
+
     function execute__meta() {
         return {
             'cmdLine' : {
@@ -69,23 +70,36 @@ var KernelModule = function(world) {
             args.character = character;
             
             var cmdResp = self.findCmd(args);
-    
+            
             if('undefined' === typeof cmdResp.cmd) {
-                args.callback({ output: 'Command not found' });
+                var cmd_soundex  = [],
+                    word_soundex = utils.soundex({ 'string' : cmdResp.word });
+                
+                for(var cs = 0; cs < cmdResp.possible_cmds.length; cs++) {
+                    if(cmdResp.possible_cmds[cs].is_soundex_match({ 'soundex' : word_soundex }))
+                        cmd_soundex.push(cmdResp.possible_cmds[cs].id);
+                }
+
+                var output = 'Command not found.';
+
+                if(cmd_soundex.length > 0)
+                    output = output + ' ' + ' Did you mean:{{br()}}{{tab()}}' + cmd_soundex.join(', ');
+
+                args.callback({ output: output });
                 return;
             }
-            
+
             // Add more data to args before passing on to a command
-            var cmdArgs    = _.clone(args);
+            var cmdArgs = _.clone(args);
             _.extend(cmdArgs, {
                 words     : cmdResp.words,
                 kernel    : self,
                 callback  : function(resp) {
                     if(! _.has(resp, 'character')) _.extend(resp, { character: character.model.toObject() }); // Make sure character is in the response always
-                    
+
                     // Update character in session
                     args.session.sessionCharacter( resp.character );
-                    
+
                     args.callback(resp);
                 }
             });
@@ -129,7 +143,7 @@ var KernelModule = function(world) {
                 break;
             }
     
-            word = word.substr(0, word.length - 2);
+            word = word.substr(0, word.length - 1);
         }
         
         // Find the first one that matches
@@ -144,8 +158,10 @@ var KernelModule = function(world) {
         }
         
         return {
-            cmd   : cmdFound,
-            words : words
+            cmd           : cmdFound,
+            word          : words[0], 
+            words         : words,
+            possible_cmds : commands
         };
     };
 
@@ -157,7 +173,7 @@ var KernelModule = function(world) {
         new SysTeleportCmd(world),
         new WalkCmd(world)
     ];
-    
+
     self.initialize();
 
     return self;

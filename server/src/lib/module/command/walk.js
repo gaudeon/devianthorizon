@@ -7,17 +7,17 @@ var Command     = require('../command'),
 
 var WalkCommand = function(world) {
     var self = new Command();
-    
+
     self.world = world;
 
     self.id = 'walk';
 
-    self.regex = RegExp('^walk');
+    self.regex = RegExp('^\\bwalk\\b');
 
     self.indexes = [
         'walk'
     ];
-    
+
     self.permissionGroups = [ 'character' ];
 
     self.help = {
@@ -29,21 +29,21 @@ var WalkCommand = function(world) {
 
     self.runCMD = function(args, callback) {
         var direction = new GateModule().translateDirection({ 'direction' : args.words[1] });
-        
+
         new PlaceModule().findMe({ 'id' : args.character.place() }, function(source) {
-            
+
             source.gates(function(gates) {
                 var gate = (_.filter(gates, function(g) { return g.direction() === direction; }))[0];
-                
+
                 if(gate) {
                     new PlaceModule().findMe({ 'id' : gate.destination() }, function(destination) {
-                        
+
                         // remove character from current location
                         args.character.unsetPlace(function() {
-                            
+
                             // move the character to his/her/it's new location
                             args.character.setPlace(destination, function() {
-                                
+
                                 // look...
                                 args.kernel.execute({
                                     'cmdLine'  : 'look',
@@ -53,23 +53,23 @@ var WalkCommand = function(world) {
                                     },
                                     'internal' : true
                                 });
-                                
+
                             });
-                            
+
                         });
-                        
+
                     });
                 }
                 else {
                     var output = 'You are unable to find a clear path to walk in that direction.';
-                    
+
                     callback({
                         'place'  : source.model.toObject(),
                         'output' : output
                     });
                 }
             });
-            
+
         });
     };
 
