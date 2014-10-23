@@ -6,6 +6,8 @@ var Module     = require('../module'),
     GateModule = require('./gate');
 
 var BiomeModule = function() {
+    'use strict';
+    
     var self = new Module();
 
     var type_map; // private variable used by self.typeMap

@@ -3,13 +3,13 @@
 var _  = require('underscore');
 
 var Module = function() {
-    var self = this;
+    'use strict';
+    
+    var self = {};
 
     // Used to provide validation to methods
     self.validate = function(meta, data) {
         var result = (function () {
-            var self = this;
-
             self.is_valid = true;
 
             self.errors = function() {

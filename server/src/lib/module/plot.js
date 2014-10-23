@@ -4,6 +4,8 @@ var Module = require('../module'),
     _      = require('underscore');
 
 var PlotModule = function(options) {
+    'use strict';
+    
     var self = new Module();
 
     var type_map; // private variable used by self.typeMap

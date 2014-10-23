@@ -3,13 +3,15 @@
 var Command     = require('../command');
 
 var HelpCommand = function(world) {
+    'use strict';
+    
     var self = new Command();
     
     self.world = world;
 
     self.id = 'help';
 
-    self.regex = RegExp('^help');
+    self.regex = new RegExp('^help');
 
     self.indexes = [
         'help'
@@ -26,7 +28,7 @@ var HelpCommand = function(world) {
 
     self.runCMD = function(args, callback) {
         var output  = '';
-        var command = args.words[1] || '';
+        var command = args.words[1] || 'help';
         var cmdResp;
         
         if(command && command === 'commands') {

@@ -9,6 +9,8 @@ var Module       = require('../module'),
     _            = require('underscore');
 
 var WorldModule = function() {
+    'use strict';
+    
     var self = new Module();
 
     // Find spawn point

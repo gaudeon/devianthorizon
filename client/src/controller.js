@@ -25,130 +25,133 @@ var CharacterModel       = require('./models/character'),
     LobbyView           = require('./views/lobby'),
     RegisterView        = require('./views/register');
 
-var Controller = Marionette.Controller.extend({
-
-    initialize: function(app) {
-        var self = this;
-        
-        // -- namespace for instantiated objects
-        self.app         = app;
-        self.models      = {};
-        self.collections = {};
-        self.views       = {};
-    },
+module.exports = (function() {
+    'use strict';
     
-    vent: Backbone.Wreqr.radio.channel('global').vent,
+    return Marionette.Controller.extend({
     
-    login: function() {
-        var self = this;
+        initialize: function(app) {
+            var self = this;
+            
+            // -- namespace for instantiated objects
+            self.app         = app;
+            self.models      = {};
+            self.collections = {};
+            self.views       = {};
+        },
         
-        self.views.login = new LoginView({
-            model: new LoginModel()
-        });
+        vent: Backbone.Wreqr.radio.channel('global').vent,
         
-        self.app.mainRegion.show(self.views.login);
-    },
-    
-    loginUpdate: function(data) {
-        var self = this;
+        login: function() {
+            var self = this;
+            
+            self.views.login = new LoginView({
+                model: new LoginModel()
+            });
+            
+            self.app.mainRegion.show(self.views.login);
+        },
         
-        self.views.login.model.set(data, {validate: true});
-        self.views.login.render();
-    },
-    
-    register: function() {
-        var self = this;
+        loginUpdate: function(data) {
+            var self = this;
+            
+            self.views.login.model.set(data, {validate: true});
+            self.views.login.render();
+        },
         
-        self.views.register = new RegisterView({
-            model: new RegisterModel()
-        });
+        register: function() {
+            var self = this;
+            
+            self.views.register = new RegisterView({
+                model: new RegisterModel()
+            });
+            
+            self.app.mainRegion.show(self.views.register);
+        },
         
-        self.app.mainRegion.show(self.views.register);
-    },
-    
-    registerUpdate: function(data) {
-        var self = this;
+        registerUpdate: function(data) {
+            var self = this;
+            
+            self.views.register.model.set(data, {validate: true});
+            self.views.register.render();
+        },
         
-        self.views.register.model.set(data, {validate: true});
-        self.views.register.render();
-    },
-    
-    lobby: function() {
-        var self = this;
+        lobby: function() {
+            var self = this;
+            
+            // triggering lobby checks to make sure we are logged in
+            self.vent.trigger('lobby', function(lobbyResp) {
+                if(lobbyResp.success) {
+                    self.vent.trigger('characterList', function(characterListResp) {
+                        self.views.lobby = new LobbyView({
+                            model: new LobbyModel(lobbyResp.data.result)
+                        });
+                        
+                        if(characterListResp.success) {
+                            _.each(characterListResp.data.result, function(o) {
+                                self.views.lobby.collection.add({
+                                    id        : o._id,
+                                    full_name : o.fullName,
+                                    created   : (o.createdDate.split(/T/))[0]
+                                });
+                            });
+                        }
+                        
+                        self.app.mainRegion.show(self.views.lobby);
+                    });
+                }
+                else {
+                    self.app.router.navigate('login');
+                    self.login();
+                }
+            });
+        },
         
-        // triggering lobby checks to make sure we are logged in
-        self.vent.trigger('lobby', function(lobbyResp) {
-            if(lobbyResp.success) {
-                self.vent.trigger('characterList', function(characterListResp) {
-                    self.views.lobby = new LobbyView({
-                        model: new LobbyModel(lobbyResp.data.result)
+        createCharacter: function() {
+            var self = this;
+            
+            // triggering lobby checks to make sure we are logged in
+            self.vent.trigger('lobby', function(resp) {
+                if(resp.success) {
+                    self.views.create_character = new CreateCharacterView({
+                        model: new CreateCharacterModel()
                     });
                     
-                    if(characterListResp.success) {
-                        _.each(characterListResp.data.result, function(o) {
-                            self.views.lobby.collection.add({
-                                id        : o._id,
-                                full_name : o.fullName,
-                                created   : (o.createdDate.split(/T/))[0]
-                            });
-                        });
-                    }
+                    self.app.mainRegion.show(self.views.create_character);
+                }
+                else {
+                    self.app.router.navigate('login');
+                    self.login();
+                }
+            });
+        },
+        
+        createCharacterUpdate: function(data) {
+            var self = this;
+            
+            self.views.create_character.model.set(data, {validate: true});
+            self.views.create_character.render();
+        },
+        
+        game: function() {
+            var self = this;
+            
+            // triggering lobby checks to make sure we are logged in
+            self.vent.trigger('lobby', function(resp) {
+                if(resp.success) {
+                    self.views.game = new GameView({
+                        model: new GameModel()
+                    });
                     
-                    self.app.mainRegion.show(self.views.lobby);
-                });
-            }
-            else {
-                self.app.router.navigate('login');
-                self.login();
-            }
-        });
-    },
+                    self.app.mainRegion.show(self.views.game);
+                }
+                else {
+                    self.app.router.navigate('login');
+                    self.login();
+                }
+            });
+        }
     
-    createCharacter: function() {
-        var self = this;
-        
-        // triggering lobby checks to make sure we are logged in
-        self.vent.trigger('lobby', function(resp) {
-            if(resp.success) {
-                self.views.create_character = new CreateCharacterView({
-                    model: new CreateCharacterModel()
-                });
-                
-                self.app.mainRegion.show(self.views.create_character);
-            }
-            else {
-                self.app.router.navigate('login');
-                self.login();
-            }
-        });
-    },
-    
-    createCharacterUpdate: function(data) {
-        var self = this;
-        
-        self.views.create_character.model.set(data, {validate: true});
-        self.views.create_character.render();
-    },
-    
-    game: function() {
-        var self = this;
-        
-        // triggering lobby checks to make sure we are logged in
-        self.vent.trigger('lobby', function(resp) {
-            if(resp.success) {
-                self.views.game = new GameView({
-                    model: new GameModel()
-                });
-                
-                self.app.mainRegion.show(self.views.game);
-            }
-            else {
-                self.app.router.navigate('login');
-                self.login();
-            }
-        });
-    }
+    });
+})();
 
-});
-
-module.exports = Controller;

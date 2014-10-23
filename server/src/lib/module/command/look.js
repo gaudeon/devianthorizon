@@ -4,13 +4,15 @@ var Command     = require('../command'),
     PlaceModule = require('../place');
 
 var LookCommand = function(world) {
+    'use strict';
+    
     var self = new Command();
 
     self.world = world;
 
     self.id = 'look';
 
-    self.regex = RegExp('^\\blook\\b');
+    self.regex = new RegExp('^\\blook\\b');
 
     self.indexes = [
         'look'

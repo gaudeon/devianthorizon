@@ -6,6 +6,8 @@
 //      data    => any additional data
 
 var Response = function(success, message, data) {
+    'use strict';
+    
     var self = {};
 
     self.success = success;

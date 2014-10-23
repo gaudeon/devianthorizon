@@ -4,7 +4,9 @@ var Response = require('./response'),
     _ = require('underscore');
 
 var Login = function(app) {
-    var self = this;
+    'use strict';
+    
+    var self = {};
 
     self.initialize = function() {
         self.app = app;

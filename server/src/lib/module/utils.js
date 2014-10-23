@@ -3,6 +3,8 @@
 var Module = require('../module');
 
 var UtilsModule = function() {
+    'use strict';
+    
     var self = new Module();
 
     function soundex__meta() {

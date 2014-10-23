@@ -4,13 +4,15 @@ var Module = require('../module'),
     utils  = require('./utils');
 
 var CommandModule = function() {
+    'use strict';
+    
     var self = new Module();
 
     // This should be overwritten with a unique id for the command (e.g. the look command and synonyms could have the id 'look')
     self.id = 'undefined';
 
     // overwrite this and return the RegExp object that can be used for matching a command
-    self.regex = RegExp('.');
+    self.regex = new RegExp('.');
 
     // overwrite this and return a list of words that the kernel can index on as a match for this command
     self.indexes = [ ];

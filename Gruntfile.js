@@ -134,9 +134,13 @@ module.exports = function(grunt) {
         },
 
         watch: {
-            scripts: {
+            server: {
+                files: ['server.js', 'server/**/*.js'],
+                tasks: ['jshint:dev']
+            },
+            client: {
                 files: ['client/src/**/*.js', 'client/templates/**/*.html'],
-                tasks: ['clean:dev:src', 'browserify:main', 'concat', 'copy:dev']
+                tasks: ['clean:dev:src', 'browserify:main', 'jshint:dev', 'concat', 'copy:dev']
             },
             sass: {
                 files: ['client/styles/**/*.scss'],
@@ -156,7 +160,7 @@ module.exports = function(grunt) {
 
         concurrent: {
             dev: {
-                tasks: ['nodemon:dev', 'watch:scripts', 'watch:sass'],
+                tasks: ['nodemon:dev', 'watch:server', 'watch:client', 'watch:sass'],
                 options: {
                     logConcurrentOutput: true
                 }

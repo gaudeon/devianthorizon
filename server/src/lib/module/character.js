@@ -6,6 +6,8 @@ var Module         = require('../module'),
     _              = require('underscore');
 
 var CharacterModule = function() {
+    'use strict';
+    
     var self = new Module();
 
     // Find

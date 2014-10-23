@@ -3,7 +3,9 @@
 var io = require('socket');
 
 var Lobby = (function() {
-    var self = this;
+    'use strict';
+    
+    var self = {};
 
     initialize();
 

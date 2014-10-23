@@ -1,15 +1,15 @@
 // The character view
 
-// TODO: Make the play button work
-
-var CharacterView = Backbone.Marionette.ItemView.extend({
-    template: require('../../templates/character.html'),
+module.exports = (function() {
+    'use strict';
     
-    className: 'character',
-
-    events: {
-    },
+    return Backbone.Marionette.ItemView.extend({
+        template: require('../../templates/character.html'),
+        
+        className: 'character',
     
-});
-
-module.exports = CharacterView;
+        events: {
+        },
+        
+    });
+})();

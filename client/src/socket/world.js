@@ -3,7 +3,9 @@
 var io = require('socket');
 
 var World = (function() {
-    var self = this;
+    'use strict';
+    
+    var self = {};
 
     initialize();
 

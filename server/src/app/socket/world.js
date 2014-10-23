@@ -7,7 +7,9 @@ var Response        = require('./response'),
     KernelModule    = require('../../lib/module/kernel');
 
 var World = function(app) {
-    var self = this;
+    'use strict';
+    
+    var self = {};
 
     self.initialize = function() {
         self.app = app;
@@ -103,6 +105,8 @@ var World = function(app) {
 
     // client sent command
     self.execCommand = function(data, callback) {
+        var resp;
+       
         try {
             self.kernel.execute({
                 cmdLine  : data.command || '',

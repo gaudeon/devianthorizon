@@ -1,8 +1,11 @@
 // Model for the game view
 
-var GameModel = Backbone.Model.extend({
-    defaults: {
-    }
-});
+module.exports = (function() {
+    'use strict';
+    
+    return Backbone.Model.extend({
+        defaults: {
+        }
+    });
+})();
 
-module.exports = GameModel;

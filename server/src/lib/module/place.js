@@ -8,6 +8,8 @@ var Module     = require('../module'),
     _          = require('underscore');
 
 var PlaceModule = function() {
+    'use strict';
+    
     var self = new Module();
     
     // Load from obj

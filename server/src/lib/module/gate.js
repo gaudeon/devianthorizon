@@ -5,6 +5,8 @@ var Module      = require('../module'),
     _           = require('underscore');
 
 var GateModule = function() {
+    'use strict';
+    
     var self = new Module();
     
     // Load from obj

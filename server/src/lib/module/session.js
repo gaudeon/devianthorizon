@@ -4,6 +4,8 @@ var Module       = require('../module'),
     SessionModel = require('../../../db/models/session');
 
 var Session = function(app) {
+    'use strict';
+    
     var self = new Module();
     
     initialize();

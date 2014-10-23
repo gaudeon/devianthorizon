@@ -13,6 +13,8 @@ var HelpCmd        = require('./command/help'),
     WalkCmd        = require('./command/walk');
 
 var KernelModule = function(world) {
+    'use strict';
+    
     var self = new Module();
 
     self.initialize = function() {

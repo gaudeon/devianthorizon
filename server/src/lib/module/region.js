@@ -10,6 +10,8 @@ var Module       = require('../module'),
     Biome        = require('./biome');
 
 var RegionModule = function(args) {
+    'use strict';
+    
     var self = new Module();
 
     function findMe__meta() {
@@ -81,7 +83,7 @@ var RegionModule = function(args) {
         
         var $in = [];
         for(var i = 0; i < self.model.places.length; i++) {
-            $in.push( ObjectId(self.model.places[i] ) );
+            $in.push( new ObjectId( self.model.places[i] ) );
         }
         
         PlaceModel.find({ "_id" : { "$in" : $in } }, function(err, docs) {

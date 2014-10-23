@@ -5,7 +5,9 @@ var Response = require('./response'),
     CharacterModule = require('../../lib/module/character');
 
 var Lobby = function(app) {
-    var self = this;
+    'use strict';
+    
+    var self = {};
 
     self.initialize = function() {
         self.app = app;

@@ -5,6 +5,8 @@ var Plot = require('../plot'),
     _    = require('underscore');
 
 var DirtRoadPlot = function(options) {
+    'use strict';
+    
     var self = new Plot(options);
 
     initialize();

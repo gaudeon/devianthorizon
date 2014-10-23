@@ -4,7 +4,9 @@ var db = require('../db/models'),
     SessionModule = require('./lib/module/session');
 
 var ServerApp = function(express, http, request, response) {
-    var self = this;
+    'use strict';
+    
+    var self = {};
     
     initialize();
     

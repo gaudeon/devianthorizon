@@ -6,13 +6,15 @@ var Command     = require('../command'),
     _           = require('underscore');
 
 var WalkCommand = function(world) {
+    'use strict';
+    
     var self = new Command();
 
     self.world = world;
 
     self.id = 'walk';
 
-    self.regex = RegExp('^\\bwalk\\b');
+    self.regex = new RegExp('^\\bwalk\\b');
 
     self.indexes = [
         'walk'

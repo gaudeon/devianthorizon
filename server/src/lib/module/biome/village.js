@@ -3,6 +3,8 @@
 var Biome = require('../biome');
 
 var VillageBiome = function() {
+    'use strict';
+    
     var self = new Biome();
 
     initialize();

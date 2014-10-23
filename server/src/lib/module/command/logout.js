@@ -3,13 +3,15 @@
 var Command     = require('../command');
 
 var LogoutCommand = function(world) {
+    'use strict';
+    
     var self = new Command();
     
     self.world = world;
 
     self.id = 'logout';
 
-    self.regex = RegExp('^logout');
+    self.regex = new RegExp('^logout');
 
     self.indexes = [
         'logout'

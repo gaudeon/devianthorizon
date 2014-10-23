@@ -4,13 +4,15 @@ var Command = require('../command'),
     PlaceModule = require('../place');
 
 var SysTeleportCommand = function(world) {
+    'use strict';
+    
     var self = new Command();
 
     self.world = world;
 
     self.id = 'sys_teleport';
 
-    self.regex = RegExp('^\\bsys_teleport\\b');
+    self.regex = new RegExp('^\\bsys_teleport\\b');
 
     self.indexes = [
         'sys_teleport'

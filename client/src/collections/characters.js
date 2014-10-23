@@ -2,8 +2,11 @@
 
 var Character = require('../models/character');
 
-var Characters = Backbone.Collection.extend({
-  model: Character
-});
+module.exports = (function() {
+    'use strict';
+    
+    return Backbone.Collection.extend({
+        model: Character
+    });
+})();
 
-module.exports = Characters;
