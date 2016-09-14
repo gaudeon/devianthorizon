@@ -26,11 +26,7 @@ coverage
 client/requires
 
 # Compiled code
-build
 dist
-public/css
-public/img
-public/js
 
 # Dependency directory
 # Deployed apps should consider commenting this line out:

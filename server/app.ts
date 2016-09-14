@@ -59,8 +59,8 @@ class Server {
     this.app.use(bodyParser.urlencoded({ extended: true }));
 
     //add static paths
-    this.app.use(express.static(path.join(__dirname, "public")));
-    this.app.use(express.static(path.join(__dirname, "bower_components")));
+    this.app.use("/public", express.static(path.join(__dirname, "../client/public")));
+    this.app.use("/public/bower_components", express.static(path.join(__dirname, "../bower_components")));
 
     // catch 404 and forward to error handler
     this.app.use(function(err: any, req: express.Request, res: express.Response, next: express.NextFunction) {

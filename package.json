@@ -26,6 +26,8 @@
     "gulp": "^3.9.1",
     "gulp-clean": "^0.3.2",
     "gulp-nodemon": "^2.1.0",
+    "gulp-sass": "^2.3.2",
+    "gulp-sourcemaps": "^1.6.0",
     "gulp-tslint": "^6.1.1",
     "gulp-typescript": "^2.13.6",
     "lodash": "^4.15.0",
