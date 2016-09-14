@@ -24,11 +24,15 @@ GULP.task('transpile-server-files', ['clean-server-files','tslint'], function() 
     var tsResult = TS_PROJECT.src()
         .pipe(TS(TS_PROJECT));
 
-    return tsResult.js.pipe(GULP.dest('server')); 
-            
+    return tsResult.js.pipe(GULP.dest('server'));
+
 });
 
-GULP.task('default', ['transpile-server-files'], function() {
+GULP.task('watch', function() {
+    GULP.watch('server/**/*.ts', ['transpile-server-files']);
+});
+
+GULP.task('default', ['transpile-server-files', 'watch'], function() {
     return NODEMON({
         script: 'bin/server.js',
         ext: 'js html',
