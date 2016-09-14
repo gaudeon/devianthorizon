@@ -1,0 +1,114 @@
+<link rel="import" href="/public/bower_components/polymer/polymer.html">
+<link rel="import" href="/public/bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="/public/bower_components/paper-toast/paper-toast.html">
+
+<dom-module id="mud-app-login">
+
+    <template>
+        <iron-ajax auto id="ironAjaxIsAuthenticated" url="/user/isAuthenticated" method="GET" handleAs="json" on-response="ajaxIsAuthenticated"></iron-ajax>
+        <iron-ajax id="ironAjaxLogin" url="/user/login" method="POST" content-type="application/json" handleAs="json" on-response="ajaxLogin"></iron-ajax>
+        <template is="dom-if" if="{{isAuthenticated}}">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="navbar-text">Welcome, {{ firstName }}</li>
+            </ul>
+        </template>
+        <template is="dom-if" if="{{!isAuthenticated}}">
+            <template is="dom-if" if="{{!isDisplayingLoginForm}}">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#" on-tap="eventDisplayForm">Login</a></li>
+                </ul>
+            </template>
+            <template is="dom-if" if="{{isDisplayingLoginForm}}">
+                <form class="navbar-form navbar-right" on-submit="eventLogin">
+                    <div class="form-group">
+                        <input id="username" type="text" class="form-control" placeholder="Username">
+                        <input id="password" type="password" class="form-control" placeholder="Password">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+            </template>
+        </template>
+        <paper-toast id="toastError" duration="4000" class="text-danger bg-danger fit-bottom"></paper-toast>
+    </template>
+
+    <script>
+    Polymer({
+        is: "mud-app-login",
+
+        properties: {
+            isAuthenticated: {
+                type: Boolean,
+                value: false
+            },
+            isDisplayingLoginForm: {
+                type: Boolean,
+                value: false
+            },
+            firstName: {
+                type: String,
+                value: ''
+            }
+        },
+
+        ajaxIsAuthenticated: function(data) {
+            var resp = data.detail.response;
+
+            var isAuthenticated = resp['isAuthenticated'] || false;
+            var firstName       = resp['firstName'] || '';
+
+            if(isAuthenticated) {
+                this.set('firstName', firstName);
+            }
+
+            this.set('isAuthenticated', isAuthenticated);
+        },
+
+        ajaxLogin: function(data) {
+            var resp = data.detail.response;
+
+            var isAuthenticated = resp['isAuthenticated'] || false;
+            var firstName       = resp['firstName'] || '';
+            var error           = resp['error'] || '';
+
+            if(isAuthenticated) {
+                this.set('firstName', firstName);
+            }
+            else {
+                this.$.toastError.text = resp.error;
+                this.$.toastError.open();
+            }
+
+            this.$$('#username').value = '';
+            this.$$('#password').value = '';
+
+            this.$$('#username').focus();
+
+            this.set('isAuthenticated', isAuthenticated);
+        },
+
+        eventDisplayForm: function(ev) {
+            ev.preventDefault();
+
+            this.set('isDisplayingLoginForm', true);
+        },
+
+        eventLogin: function(ev) {
+            ev.preventDefault();
+
+            var ajaxEl = this.$.ironAjaxLogin;
+            var username = this.$$('#username').value;
+            var password = this.$$('#password').value;
+
+            if(! ajaxEl.loading) {
+                ajaxEl.body = {
+                    username: username,
+                    password: password
+                };
+
+                ajaxEl.generateRequest();
+            }
+        }
+    });
+    </script>
+
+</dom-module>

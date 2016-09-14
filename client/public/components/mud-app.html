@@ -1,0 +1,27 @@
+<link rel="import" href="/public/bower_components/polymer/polymer.html">
+<link rel="import" href="/public/components/mud-app-login.html">
+
+<dom-module id="mud-app">
+
+    <template>
+        <article>
+            <header class="bg-primary container-fluid">
+                <h1>mudJS</h1>
+            </header>
+            <nav class="nav navbar navbar-default container-fluid">
+                <mud-app-login></mud-app-login>
+            </nav>
+            <main class="container-fluid">
+            </main>
+            <footer class="container-fluid">
+            </footer>
+        </article>
+    </template>
+
+    <script>
+    Polymer({
+        is: "mud-app"
+    });
+    </script>
+
+</dom-module>

@@ -6,6 +6,7 @@ import * as express from "express";
 import * as path from "path";
 
 import * as indexRoute from "./routes/index";
+import * as userRoute from "./routes/user";
 
 /**
  * The server.
@@ -84,9 +85,14 @@ class Server {
 
     //create routes
     var index: indexRoute.Index = new indexRoute.Index();
+    var user: userRoute.User = new userRoute.User();
 
     //home page
     router.get("/", index.index.bind(index.index));
+
+    //user functions
+    router.get("/user/isAuthenticated", user.isAuthenticated.bind(user.isAuthenticated));
+    router.post("/user/login", user.login.bind(user.login));
 
     //use router middleware
     this.app.use(router);
