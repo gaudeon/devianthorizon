@@ -8,7 +8,12 @@
     "mongodb": "registry:dt/mongodb#2.1.0+20160602142941",
     "mongoose": "registry:dt/mongoose#4.5.9+20160826204928",
     "node": "registry:dt/node#6.0.0+20160909174046",
+    "node-uuid": "registry:dt/node-uuid#0.0.0+20160316155526",
     "serve-static": "registry:dt/serve-static#0.0.0+20160606155157",
-    "socket.io": "registry:dt/socket.io#1.4.4+20160909205835"
+    "socket.io": "registry:dt/socket.io#1.4.4+20160909205835",
+    "uuid": "registry:dt/uuid#3.3.0+20160728152600"
+  },
+  "dependencies": {
+    "node-uuid": "registry:npm/node-uuid#1.4.7+20160723033700"
   }
 }

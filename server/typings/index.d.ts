@@ -8,3 +8,4 @@
 /// <reference path="globals/node/index.d.ts" />
 /// <reference path="globals/serve-static/index.d.ts" />
 /// <reference path="globals/socket.io/index.d.ts" />
+/// <reference path="modules/node-uuid/index.d.ts" />

@@ -43,10 +43,12 @@ GULP.task('watch', function() {
     GULP.watch('client/sass/**/*.scss', ['client-sass']);
 });
 
-GULP.task('default', ['transpile-server-files', 'client-sass', 'watch'], function() {
+GULP.task('serve', ['transpile-server-files', 'client-sass', 'watch'], function() {
     return NODEMON({
         script: 'bin/server.js',
         ext: 'js html',
         env: { 'NODE_ENV': 'development' }
     });
 });
+
+GULP.task('default', ['serve'], function() {});
