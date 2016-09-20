@@ -3,6 +3,7 @@
 
 import * as express from "express";
 import * as path from "path";
+import * as session from "../app/model/session";
 
 module Route {
 

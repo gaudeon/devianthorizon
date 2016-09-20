@@ -4,9 +4,14 @@
 import * as bodyParser from "body-parser";
 import * as express from "express";
 import * as path from "path";
+import * as mongoose from "mongoose";
+import * as session from "express-session";
+import * as connectMongo from "connect-mongo";
 
 import * as indexRoute from "./routes/index";
 import * as userRoute from "./routes/user";
+
+mongoose.connect("mongodb://localhost/mudjs"); // TODO: This should be setup to be persistent and pull db from config
 
 /**
  * The server.
@@ -69,6 +74,24 @@ class Server {
       err.status = 404;
       next(err);
     });
+
+    // setup sessioning -- TODO: need to clean all of this up more later because i'm not sure all of this belows in this function
+    const mongoStore: connectMongo.MongoStoreFactory = connectMongo(session);
+
+    let sessionOptions = {
+        secret: "populate me using an external config file",
+        cookie: {
+            secure: false
+        },
+        store: new mongoStore({ mongooseConnection: mongoose.connection })
+    };
+
+    if (this.app.get("env") === "production") {
+        this.app.set("trust proxy", 1); // trust first proxy
+        sessionOptions.cookie.secure = true; // serve secure cookies
+    }
+
+    this.app.use(session(sessionOptions));
   }
 
   /**

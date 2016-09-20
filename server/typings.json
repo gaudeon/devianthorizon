@@ -1,8 +1,10 @@
 {
   "globalDependencies": {
     "body-parser": "registry:dt/body-parser#0.0.0+20160619023215",
+    "connect-mongo": "registry:dt/connect-mongo#0.0.0+20160317120654",
     "express": "registry:dt/express#4.0.0+20160708185218",
     "express-serve-static-core": "registry:dt/express-serve-static-core#4.0.0+20160829034835",
+    "express-session": "registry:dt/express-session#0.0.0+20160819134112",
     "lodash": "registry:dt/lodash#4.14.0+20160830145422",
     "mime": "registry:dt/mime#0.0.0+20160316155526",
     "mongodb": "registry:dt/mongodb#2.1.0+20160602142941",
