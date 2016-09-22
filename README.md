@@ -1,14 +1,11 @@
-# mudJS
+# devianthorizon
 
-JavaScript based Multi-User Dungeon
+Web site and JavaScript Text-based Multi-User Dungeon
 
-## Prerequisites
+## Dependancies
 
-node.js
-
-ruby and sass gem
-
-mongodb
+1. node.js / npm
+2. mongoDB
 
 ## Setup
 
@@ -16,8 +13,6 @@ npm install
 
 bower install
 
-grunt init
-
 ## Running
 
-grunt server
+gulp

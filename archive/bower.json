@@ -1,0 +1,38 @@
+{
+  "name": "mudJS",
+  "version": "0.0.4",
+  "homepage": "https://github.com/gaudeon/mudJS",
+  "authors": [
+    "gaudeon <gaudeon@cpan.org>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "socket.io-client": "~1.1.0",
+    "backbone.marionette": "~2.1.0"
+  },
+  "exportsOverride": {
+    "jquery": {
+      "js": "dist/jquery.js"
+    },
+    "underscore": {
+      "js": "underscore.js"
+    },
+    "backbone": {
+      "js": "backbone.js"
+    },
+    "backbone.marionette": {
+      "js": "lib/backbone.marionette.js"
+    },
+    "socket.io-client": {
+      "js": "socket.io.js"
+    }
+  }
+}

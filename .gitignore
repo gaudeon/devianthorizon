@@ -2,6 +2,9 @@
 logs
 *.log
 
+# .swp files
+*.swp
+
 # Runtime data
 pids
 *.pid
@@ -23,14 +26,7 @@ coverage
 client/requires
 
 # Compiled code
-build
 dist
-public/css
-public/img
-public/js
-
-# Custom configuration
-server/src/config/override.js
 
 # Dependency directory
 # Deployed apps should consider commenting this line out:
