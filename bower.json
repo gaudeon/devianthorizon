@@ -17,6 +17,8 @@
     "font-awesome": "fontawesome#^4.6.3",
     "iron-meta": "^1.1.2",
     "iron-ajax": "^1.4.3",
-    "paper-toast": "^1.3.0"
+    "paper-toast": "^1.3.0",
+    "iron-pages": "^1.0.8",
+    "app-route": "*"
   }
 }

@@ -11,7 +11,11 @@ import * as connectMongo from "connect-mongo";
 import * as indexRoute from "./routes/index";
 import * as userRoute from "./routes/user";
 
+// connect to database
 mongoose.connect("mongodb://localhost/mudjs"); // TODO: This should be setup to be persistent and pull db from config
+
+// Use bluebird promises for mongoose
+mongoose.Promise = require("bluebird");
 
 /**
  * The server.
