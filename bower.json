@@ -1,12 +1,12 @@
 {
-  "name": "mudjs",
-  "description": "JavaScript based multi user dungeon",
+  "name": "devianthorizon",
+  "description": "Web site and JavaScript Text-based Multi-User Dungeon",
   "main": "./bin/server.js",
   "authors": [
     "Travis Chase"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/gaudeon/mudJS",
+  "homepage": "https://github.com/gaudeon/devianthorizon",
   "private": true,
   "dependencies": {
     "socket.io-client": "^1.4.8",

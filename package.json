@@ -1,8 +1,8 @@
 {
-  "name": "mudjs",
+  "name": "devianthorizon",
   "version": "0.0.1",
   "private": true,
-  "description": "JavaScript based multi user dungeon",
+  "description": "Web site and JavaScript Text-based Multi-User Dungeon",
   "main": "./bin/server.js",
   "scripts": {
     "start": "node ./bin/server.js",
@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gaudeon/mudJS.git"
+    "url": "git+https://github.com/gaudeon/devianthorizon.git"
   },
   "author": "Travis Chase",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/gaudeon/mudJS/issues"
+    "url": "https://github.com/gaudeon/devianthorizon/issues"
   },
-  "homepage": "https://github.com/gaudeon/mudJS#readme",
+  "homepage": "https://github.com/gaudeon/devianthorizon#readme",
   "dependencies": {
     "bcrypt": "^0.8.7",
     "bluebird": "^3.4.6",
