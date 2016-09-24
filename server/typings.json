@@ -1,5 +1,6 @@
 {
   "globalDependencies": {
+    "bcrypt-nodejs": "registry:dt/bcrypt-nodejs#0.0.0+20160316155526",
     "body-parser": "registry:dt/body-parser#0.0.0+20160619023215",
     "connect-mongo": "registry:dt/connect-mongo#0.0.0+20160317120654",
     "express": "registry:dt/express#4.0.0+20160708185218",

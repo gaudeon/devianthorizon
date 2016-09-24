@@ -3,7 +3,7 @@
 
 import * as mongoose from "mongoose";
 import * as uuid     from "node-uuid";
-import * as bcrypt   from "bcrypt";
+import * as bcrypt   from "bcrypt-nodejs";
 import * as Promise  from "bluebird";
 
 const SALT_WORK_FACTOR = 10;
@@ -76,17 +76,15 @@ userSchema.pre("save", (next: any) => {
 
 userSchema.method({
     checkPassword: (password: any, callback: any) => {
-        var deferred = Promise.pending();
-
-        bcrypt.compare(password, this.userPassword, (err: string, isMatch: boolean) => {
-            if (err) {
-                deferred.reject(err);
-            } else {
-                deferred.resolve(isMatch);
-            }
-        });
-
-        return deferred.promise;
+        return new Promise( (resolve, reject) => {
+            bcrypt.compare(password, this.userPassword, (err: Error, isMatch: boolean) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(isMatch);
+                }
+            });
+        } );
     }
 });
 

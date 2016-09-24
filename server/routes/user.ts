@@ -5,25 +5,30 @@ import * as express from "express";
 import * as path from "path";
 import userModel from "../app/model/user";
 
+interface IUserSession extends Express.Session {
+    userName: string;
+    userFirstName: string;
+}
+
 module Route {
 
     export class User {
 
         public isAuthenticated(req: express.Request, res: express.Response, next: express.NextFunction) {
-            var session = req.session;
+            let session: IUserSession = <IUserSession>req.session;
 
-            var isAuthenticated: boolean = session.userName ? true : false;
-            var firstName: string        = session.userFirstName ? session.userFirstName : "";
+            let isAuthenticated: boolean = session.userName ? true : false;
+            let firstName: string        = session.userFirstName ? session.userFirstName : "";
 
             res.send({ isAuthenticated: isAuthenticated, firstName: firstName });
         }
 
         public login(req: express.Request, res: express.Response, next: express.NextFunction) {
-            var username: string = req.params.username;
-            var password: string = req.params.password;
+            let username: string = req.params.username;
+            let password: string = req.params.password;
 
             userModel.findOne({ userName: username })
-                .then((err: any, doc: any) => {
+                .then((doc: any) => {
                     if (doc) {
                         doc.checkPassword(password)
                             .then( (isMatch: any) => {
