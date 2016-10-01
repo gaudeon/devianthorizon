@@ -26,6 +26,7 @@ coverage
 client/requires
 
 # Compiled code
+build
 dist
 
 # Dependency directory

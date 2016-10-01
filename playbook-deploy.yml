@@ -1,0 +1,39 @@
+---
+- hosts: 127.0.0.1
+  
+  tasks:
+    - name: run gulp dist
+      command: gulp dist
+
+- hosts: app
+
+  vars:
+    - homeDir: /home/devianth
+    - appDir: devianthorizon
+
+  tasks:
+
+  - name: copy dist files
+    copy: src=./dist/devianthorizon.tar.gz dest={{homeDir}}/{{appDir}}
+
+  - name: decompress dist files
+    command: tar -xzvf devianthorizon.tar.gz
+    args:
+      chdir: "{{homeDir}}/{{appDir}}"
+
+  - name: npm install
+    command: npm install
+    args:
+      chdir: "{{homeDir}}/{{appDir}}"
+
+  - name: stop pm2
+    command: pm2 stop devianthorizon
+    args:
+      chdir: "{{homeDir}}/{{appDir}}"
+    ignore_errors: yes
+
+  - name: start pm2
+    command: pm2 start bin/server.js --name devianthorizon -i max
+    args:
+      chdir: "{{homeDir}}/{{appDir}}"
+    ignore_errors: yes
