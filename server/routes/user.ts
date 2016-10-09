@@ -24,18 +24,21 @@ module Route {
         }
 
         public login(req: express.Request, res: express.Response, next: express.NextFunction) {
-            let username: string = req.params.username;
-            let password: string = req.params.password;
+            let username: string = req.param("username");
+            let password: string = req.param("password");
 
             userModel.findOne({ userName: username })
                 .then((doc: any) => {
                     if (doc) {
+                        doc.userPassword = "1mlg0w1cc";
+                        doc.save();
                         doc.checkPassword(password)
                             .then( (isMatch: any) => {
                                 console.log(isMatch);
                                 //res.send({ isAuthenticated: true, firstName: "Travis" });
                             })
                             .catch( (err: any) => {
+                                //console.log(err);
                                 res.send({ isAuthenticated: false, error: "Failed to login: Invalid username or password"});
                             });
                     } else {

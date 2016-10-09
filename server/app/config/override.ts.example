@@ -1,0 +1,5 @@
+let overrideConfig = {
+    // key overrides go here
+};
+
+export default overrideConfig;

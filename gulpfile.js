@@ -16,6 +16,16 @@ GULP.task('clean-files', function() {
         .pipe(CLEAN());
 });
 
+GULP.task('clean-server-files', function() {
+    return GULP.src('build/server/')
+        .pipe(CLEAN());
+});
+
+GULP.task('clean-public-css-files', function() {
+    return GULP.src('build/client/public/css')
+        .pipe(CLEAN());
+});
+
 // *** typescript linter
 GULP.task('tslint', function () {
     return GULP.src(['server/**/*.ts','!server/**/*.d.ts'])
@@ -137,7 +147,7 @@ GULP.task('copy-bower-components', [
 ], function() {});
 
 // *** transpile typescript
-GULP.task('transpile-server-files', ['clean-files', 'tslint'], function() {
+GULP.task('transpile-server-files', ['clean-server-files', 'tslint'], function() {
     var tsResult = TS_PROJECT.src()
         .pipe(TS(TS_PROJECT));
 
@@ -146,7 +156,7 @@ GULP.task('transpile-server-files', ['clean-files', 'tslint'], function() {
 });
 
 // *** compile sass
-GULP.task('client-sass', ['clean-files'], function () {
+GULP.task('client-sass', ['clean-public-css-files'], function () {
  return GULP.src('client/sass/**/*.scss')
   .pipe(SOURCEMAPS.init())
   .pipe(SASS({ outputStyle: 'compressed' }).on('error', SASS.logError))

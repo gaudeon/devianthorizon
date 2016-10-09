@@ -8,14 +8,14 @@ import * as mongoose from "mongoose";
 import * as session from "express-session";
 import * as connectMongo from "connect-mongo";
 
+// config
+import appConfig from "./app/config";
+
+// routes
 import * as indexRoute from "./routes/index";
 import * as userRoute from "./routes/user";
 
-// connect to database
-mongoose.connect("mongodb://localhost/mudjs"); // TODO: This should be setup to be persistent and pull db from config
 
-// Use bluebird promises for mongoose
-mongoose.Promise = require("bluebird");
 
 /**
  * The server.
@@ -25,6 +25,8 @@ mongoose.Promise = require("bluebird");
 class Server {
 
   public app: express.Application;
+
+  private mongoStore: connectMongo.MongoStoreFactory;
 
   /**
    * Bootstrap the application.
@@ -62,6 +64,12 @@ class Server {
    * @return void
    */
   private config() {
+    // connect to database
+    mongoose.connect("mongodb://localhost/" + appConfig.config.database.name);
+
+    // Use bluebird promises for mongoose
+    mongoose.Promise = require("bluebird");
+
     //mount json form parser
     this.app.use(bodyParser.json());
 
@@ -78,16 +86,11 @@ class Server {
       next(err);
     });
 
-    // setup sessioning -- TODO: need to clean all of this up more later because i'm not sure all of this belows in this function
-    const mongoStore: connectMongo.MongoStoreFactory = connectMongo(session);
+    // setup session support using express session and mongodb
+    this.mongoStore = connectMongo(session);
 
-    let sessionOptions = {
-        secret: "populate me using an external config file",
-        cookie: {
-            secure: false
-        },
-        store: new mongoStore({ mongooseConnection: mongoose.connection })
-    };
+    let sessionOptions   = appConfig.config.session;
+    sessionOptions.store = new this.mongoStore({ mongooseConnection: mongoose.connection });
 
     if (this.app.get("env") === "production") {
         this.app.set("trust proxy", 1); // trust first proxy

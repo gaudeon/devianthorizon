@@ -6,9 +6,7 @@ import * as uuid     from "node-uuid";
 import * as bcrypt   from "bcrypt-nodejs";
 import * as Promise  from "bluebird";
 
-const SALT_WORK_FACTOR = 10;
-
-export interface IUser extends mongoose.Document {
+interface IUser extends mongoose.Document {
     firstName: string;
     lastName: string;
     emailAddress: string;
@@ -17,7 +15,7 @@ export interface IUser extends mongoose.Document {
     createdDate: Date;
 };
 
-export const userSchema = new mongoose.Schema({
+let userSchema = new mongoose.Schema({
     firstName: {
         type: String,
         required: true
@@ -47,46 +45,31 @@ export const userSchema = new mongoose.Schema({
 });
 
 userSchema.pre("save", (next: any) => {
-    let user = this;
-
-    // only hash the password if it has been modified (or is new)
-    if (!user.isModified("userPassword")) {
-        return next();
-    }
-
-    // generate a salt
-    bcrypt.genSalt(SALT_WORK_FACTOR, (err: any, salt: any) => {
-        if (err) {
-            return next(err);
+    console.log(this._doc);
+    if (this._doc) {
+        let doc = <IUser>this._doc;
+        console.log("qwer");
+console.log(doc.isModified("userPassword"));
+        // only hash the password if it has been modified (or is new)
+        if (!doc.isModified("userPassword")) {
+            return next();
         }
 
-        // hash the password using our new salt
-        bcrypt.hash(user.userPassword, salt, (err: any, hash: any) => {
-            if (err) {
-                return next(err);
-            }
-
-            // override the cleartext password with the hashed one
-            user.userPassword = hash;
-            next();
-        });
-    });
-
-});
-
-userSchema.method({
-    checkPassword: (password: any, callback: any) => {
-        return new Promise( (resolve, reject) => {
-            bcrypt.compare(password, this.userPassword, (err: Error, isMatch: boolean) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(isMatch);
-                }
-            });
-        } );
+        doc.userPassword = doc.generateHash(doc.userPassword);
+        console.log(doc.userPassword);
     }
+
+    next();
+    return this;
 });
+
+userSchema.statics.generateHash = (password: String) => {
+    return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
+};
+
+userSchema.methods.checkPassword = (password: String) => {
+    return Promise.promisify(bcrypt.compareSync)(password, this.userPassword);
+};
 
 const user = mongoose.model<IUser>("User", userSchema);
 
